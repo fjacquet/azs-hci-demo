@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-
-
-####  ressource group
-az group create --name yugabytedbRG --location switzerlandwest
-# oups ...
-
 REGION=switzerlandnorth
 SIZE=Standard_D4ds_v5
 RSGRP=aksrg
@@ -14,7 +8,11 @@ YBNS=dbns
 WJNS=wikijs
 PNS=monitoring
 
-az group create --name yugabytedbRG --location $REGION
+####  ressource group
+az group create --name $RSGRP --location switzerlandwest
+# oups ...
+s
+az group create --name $RSGRP --location $REGION
 # add provider
 az provider register --namespace Microsoft.Network
 az provider register --namespace Microsoft.Compute
