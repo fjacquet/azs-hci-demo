@@ -31,7 +31,8 @@ az aks create \
 
 az aks get-credentials --resource-group $RSGRP --name $AKSNAME
 kubectl get nodes
-kubectl create clusterrolebinding yb-kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard --user=clusterUser
+kubectl create clusterrolebinding yb-kubernetes-dashboard --clusterrole=cluster-admin \
+--serviceaccount=kube-system:kubernetes-dashboard --user=clusterUser
 az aks browse --resource-group $RSGRP --name $AKSNAME
 
 
@@ -41,20 +42,20 @@ helm repo update
 helm search repo yugabytedb/yugabyte --version 2.15.3
 kubectl create namespace $YBNS
 helm install yb-demo -n $YBNS yugabytedb/yugabyte \
- --version 2.15.3 \
- --set storage.master.count=3 \
- --set storage.tserver.count=3 \
- --set storage.master.storageClass=default \
- --set storage.tserver.storageClass=default \
- --set resource.master.requests.cpu=1 \
- --set resource.master.requests.memory=1Gi \
- --set resource.tserver.requests.cpu=1 \
- --set resource.tserver.requests.memory=1Gi \
- --set resource.master.limits.cpu=1 \
- --set resource.master.limits.memory=1Gi \
- --set resource.tserver.limits.cpu=1 \
- --set resource.tserver.limits.memory=1Gi \
- --timeout=15m
+--version 2.15.3 \
+--set storage.master.count=3 \
+--set storage.tserver.count=3 \
+--set storage.master.storageClass=default \
+--set storage.tserver.storageClass=default \
+--set resource.master.requests.cpu=1 \
+--set resource.master.requests.memory=1Gi \
+--set resource.tserver.requests.cpu=1 \
+--set resource.tserver.requests.memory=1Gi \
+--set resource.master.limits.cpu=1 \
+--set resource.master.limits.memory=1Gi \
+--set resource.tserver.limits.cpu=1 \
+--set resource.tserver.limits.memory=1Gi \
+--timeout=15m
 
 kubectl get pods --namespace $YBNS
 kubectl get services --namespace $YBNS
@@ -76,14 +77,14 @@ IPS=$(kubectl get service yb-master-ui  -n $YBNS --output jsonpath='{.status.loa
 helm repo add requarks https://charts.js.wiki
 # connect to DB
 kubectl run ysqlsh-client -it --rm  --image yugabytedb/yugabyte-client \
-  --command -- ysqlsh -h yb-tservers.$RSGRP.svc.cluster.local
+--command -- ysqlsh -h yb-tservers.$RSGRP.svc.cluster.local
 # create DB
 create database wikijs;
 
 helm upgrade --install lab requarks/wiki -n $WJNS \
-  --set postgresql.enabled=false \
-  --set ingres.enabled=true \
-  --set externalPostgresql.databaseURL="postgresql://yugabyte@yb-tserver-service.$RSGRP.svc.cluster.local:5433/wikijs?sslmode=disable"
+--set postgresql.enabled=false \
+--set ingres.enabled=true \
+--set externalPostgresql.databaseURL="postgresql://yugabyte@yb-tserver-service.$RSGRP.svc.cluster.local:5433/wikijs?sslmode=disable"
 
 
 podname=$(kubectl get pod -n $WJNS -o jsonpath='{.items[0].metadata.name}')
@@ -92,6 +93,8 @@ kubectl scale --replicas 5 deployment lab-wiki -n $WJNS
 
 #### jenkins
 helm install lab azure-marketplace/jenkins
+
+
 
 
 #### Prometheus
@@ -104,7 +107,11 @@ helm repo list
 # Create a namespace for Prometheus and Grafana resources
 kubectl create ns $PNS
 # Install Prometheus using HELM
-helm  upgrade --install prometheus prometheus-community/kube-prometheus-stack -n $PNS --values values.yml
+helm  upgrade --install prometheus prometheus-community/kube-prometheus-stack -n $PNS\
+--set kubeEtcd.enabled=false \
+--set kubeControllerManager.enabled=false \
+--set kubeScheduler.enabled=false \
+--set kubelet.serviceMonitor.https=false
 # Check all resources in Prometheus Namespace
 kubectl get all -n $PNS
 # Port forward the Prometheus service
@@ -114,6 +121,22 @@ kubectl get secret -n $PNS prometheus-grafana -o=jsonpath='{.data.admin-user}' |
 # Get the Password
 kubectl get secret -n $PNS prometheus-grafana -o=jsonpath='{.data.admin-password}' |base64 -d
 # Port forward the Grafana service
+
+
+#### nginx
+helm upgrade ingress-nginx ingress-nginx \
+--repo https://kubernetes.github.io/ingress-nginx \
+--namespace ingress-nginx \
+--set controller.metrics.enabled=true \
+--set controller.metrics.serviceMonitor.enabled=true \
+--set controller.metrics.serviceMonitor.additionalLabels.release="prometheus"\
+--set-string controller.podAnnotations."prometheus\.io/scrape"="true" \
+--set-string controller.podAnnotations."prometheus\.io/port"="10254" \
+--set prometheus.prometheusSpec.podMonitorSelectorNilUsesHelmValues=false \
+--set prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues=false
+
+
+podname=$(kubectl get pod -n $WJNS -o jsonpath='{.items[0].metadata.name}')
 kubectl port-forward -n $PNS prometheus-grafana-5449b6ccc9-b4dv4 3000
 
 # Enable access
