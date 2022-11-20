@@ -4,10 +4,11 @@
 
 . ./register-provider.sh
 . ./create-rg.sh
-. ./create-dns.sh
 . ./create-aks.sh
+. ./create-dns-v2.sh
 . ./create-pip.sh
 
+. ./deploy-hello.sh
 . ./deploy-db.sh
 . ./deploy-wikijs.sh
 
@@ -16,7 +17,5 @@
 
 . ./deploy-monitoring.sh
 
-
-
-podname=$(kubectl get pod -n $WIKIJS_NAMESPACE -o jsonpath='{.items[0].metadata.name}')
-kubectl port-forward -n $MONITORING_NAMESPACE $podname 3000
+podname=$(kubectl get pod -n $NAMESPACE_WIKIJS -o jsonpath='{.items[0].metadata.name}')
+kubectl port-forward -n $NAMESPACE_MONITORING $podname 3000

@@ -6,7 +6,7 @@
 #-----------------------------------------------------------------------------
 helm upgrade --install $DIST ingress-nginx \
   --repo https://kubernetes.github.io/ingress-nginx \
-  --namespace $INGRESS_NAMESPACE \
+  --namespace $NAMESPACE_INGRESS \
   --set controller.metrics.enabled=true \
   --set controller.metrics.serviceMonitor.enabled=true \
   --set controller.metrics.serviceMonitor.additionalLabels.release="prometheus" \

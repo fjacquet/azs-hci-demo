@@ -6,8 +6,8 @@
 helm repo add yugabytedb https://charts.yugabyte.com
 helm repo update
 helm search repo yugabytedb/yugabyte --version 2.15.3
-kubectl create namespace $YUGA_NAMESPACE
-helm install yb-demo -n $YUGA_NAMESPACE yugabytedb/yugabyte \
+kubectl create namespace $NAMESPACE_YUGA
+helm install yb-demo -n $NAMESPACE_YUGA yugabytedb/yugabyte \
   --version 2.15.3 \
   --set storage.master.count=3 \
   --set storage.tserver.count=3 \
@@ -23,5 +23,5 @@ helm install yb-demo -n $YUGA_NAMESPACE yugabytedb/yugabyte \
   --set resource.tserver.limits.memory=1Gi \
   --timeout=15m
 
-kubectl get pods --namespace $YUGA_NAMESPACE
-kubectl get services --namespace $YUGA_NAMESPACE
+kubectl get pods --namespace $NAMESPACE_YUGA
+kubectl get services --namespace $NAMESPACE_YUGA
