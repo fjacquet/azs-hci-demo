@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# -*- coding: utf-8 -*-
+
+AKS_CLUSTER_NAME=akscluster
+AKS_RESOURCE_GROUP=aksrg
+DIST=lab
+DNS_DOMAIN=aks.ez-lab.xyz
+DNS_RESOURCE_GROUP=dnsrg
+EMAIL=fjacquet@ljfch.onmicrosoft.com
+INGRESS_NAMESPACE=ingress-nginx
+KAPPS_NAMESPACE=kubeapps
+MONITORING_NAMESPACE=monitoring
+REGION=switzerlandnorth
+SIZE=Standard_D4ds_v5
+WIKIJS_NAMESPACE=wikijs
+YUGA_NAMESPACE=dbns
+
+export AKS_CLUSTER_NAME AKS_RESOURCE_GROUP
+export DNS_DOMAIN DNS_RESOURCE_GROUP EMAIL
+export INGRESS_NAMESPACE
+export KAPPS_NAMESPACE
+export MONITORING_NAMESPACE
+export REGION SIZE
+export WIKIJS_NAMESPACE
+export YUGA_NAMESPACE
