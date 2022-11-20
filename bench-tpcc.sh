@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
-
+set -x
 #-----------------------------------------------------------------------------
 # demo tpcc benchmark
 #-----------------------------------------------------------------------------
@@ -13,3 +13,4 @@ IPS=$(kubectl get service yb-master-ui -n $NAMESPACE_YUGA --output jsonpath='{.s
 ./tpccbenchmark --nodes=$IPS --load=true
 ./tpccbenchmark --nodes=$IPS --enable-foreign-keys=true
 ./tpccbenchmark --nodes=$IPS --execute=true
+set +x

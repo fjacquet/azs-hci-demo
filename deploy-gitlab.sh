@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
-
+set -x
 #-----------------------------------------------------------------------------
 #### gitlab
 #-----------------------------------------------------------------------------
 helm repo add gitlab https://charts.gitlab.io/
-
+helm repo update
 kubectl create secret generic gitlab-postgresql-password \
   --from-literal=postgresql-password=$(head -c 512 /dev/urandom | LC_CTYPE=C tr -cd 'a-zA-Z0-9' | head -c 64) \
   --from-literal=postgresql-postgres-password=$(head -c 512 /dev/urandom | LC_CTYPE=C tr -cd 'a-zA-Z0-9' | head -c 64)
@@ -23,4 +23,5 @@ helm upgrade --install gitlab gitlab/gitlab \
 
 kubectl get ingress -lrelease=gitlab
 kubectl get secret gitlab-gitlab-initial-root-password -ojsonpath='{.data.password}' | base64 --decode
-echo
+# echo
+set +x

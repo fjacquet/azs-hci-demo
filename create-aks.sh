@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
-
+set -x
 #-----------------------------------------------------------------------------
 ####  AKS
 #-----------------------------------------------------------------------------
 az aks create \
-  --resource-group $RESOURCE_GROUP_AKS \
+  --resource-group $AZ_RESOURCE_GROUP \
   --name $AKS_CLUSTER_NAME \
   --node-count $AKS_COUNT \
   --node-vm-size $AKS_SIZE \
@@ -17,7 +17,7 @@ az aks create \
 
 # Create .kubeconfig
 az aks get-credentials \
-  --resource-group $RESOURCE_GROUP_AKS \
+  --resource-group $AZ_RESOURCE_GROUP \
   --name $AKS_CLUSTER_NAME
 
 kubectl get nodes
@@ -25,5 +25,7 @@ kubectl create clusterrolebinding yb-kubernetes-dashboard \
   --clusterrole=cluster-admin \
   --serviceaccount=kube-system:kubernetes-dashboard \
   --user=clusterUser
-az aks browse --resource-group $RESOURCE_GROUP_AKS \
+az aks browse --resource-group $AZ_RESOURCE_GROUP \
   --name $AKS_CLUSTER_NAME
+
+set +x

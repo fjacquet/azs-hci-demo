@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
+set -x
 #-----------------------------------------------------------------------------
 #### Yugabyte storage
 #-----------------------------------------------------------------------------
+set -x
 helm repo add yugabytedb https://charts.yugabyte.com
 helm repo update
 helm search repo yugabytedb/yugabyte --version 2.15.3
@@ -25,3 +27,4 @@ helm install yb-demo -n $NAMESPACE_YUGA yugabytedb/yugabyte \
 
 kubectl get pods --namespace $NAMESPACE_YUGA
 kubectl get services --namespace $NAMESPACE_YUGA
+set +x

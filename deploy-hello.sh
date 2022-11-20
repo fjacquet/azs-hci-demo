@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
+set -x
 export ACME_ISSUER=letsencrypt-staging
-cat <<-EOF >helmfile.yml
+cat <<-EOF >helmfile.yaml
 repositories:
   - name: itscontained
     url: https://charts.itscontained.io
@@ -54,7 +55,7 @@ releases:
             metadata:
               name: hello-kubernetes
               annotations:
-                external-dns.alpha.kubernetes.io/hostname: hello.{{ requiredEnv "AZ_DNS_DOMAIN" }}
+                external-dns.alpha.kubernetes.io/hostname: hello.$AZ_DNS_DOMAIN
             spec:
               type: LoadBalancer
               ports:
@@ -69,14 +70,14 @@ releases:
               name: hello-kubernetes
               annotations:
                 kubernetes.io/ingress.class: nginx
-                cert-manager.io/cluster-issuer: {{ requiredEnv "ACME_ISSUER" }}
+                cert-manager.io/cluster-issuer: $ACME_ISSUER
             spec:
               tls:
                 - hosts:
-                    - hello.{{ requiredEnv "AZ_DNS_DOMAIN" }}
+                    - hello.$AZ_DNS_DOMAIN
                   secretName: tls-secret
               rules:
-              - host: hello.{{ requiredEnv "AZ_DNS_DOMAIN" }}
+              - host: hello.$AZ_DNS_DOMAIN
                 http:
                   paths:
                   - backend:
@@ -93,7 +94,7 @@ EOF
 #-----------------------------------------------------------------------------
 
 helmfile apply
-rm helmfile.yml
+rm helmfile.yaml
 #-----------------------------------------------------------------------------
 # verify
 #-----------------------------------------------------------------------------
@@ -107,3 +108,4 @@ az network dns record-set list \
 
 kubectl describe ingress --namespace hello
 kubectl describe certificate --namespace hello
+set +x

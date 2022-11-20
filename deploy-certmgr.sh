@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
-
+set -x
 #-----------------------------------------------------------------------------
 # Generate file
 #-----------------------------------------------------------------------------
-cat <<-EOF >helmfile.yml
+cat <<-EOF >helmfile.yaml
 repositories:
   - name: bitnami
     url: https://charts.bitnami.com/bitnami
@@ -15,25 +15,25 @@ repositories:
 
 releases:
   - name: external-dns
-    namespace: {{ requiredEnv "NAMESPACE_KUBEADDONS" }}
+    namespace: $NAMESPACE_KUBEADDONS
     chart: bitnami/external-dns
-    version: 5.1.1
+    # version: 5.1.1
     values:
       - provider: azure
         azure:
-          resourceGroup: {{ requiredEnv "RESOURCE_GROUP_AKS" }}
-          tenantId: {{ requiredEnv "AZ_TENANT_ID" }}
-          subscriptionId: {{ requiredEnv "AZ_SUBSCRIPTION_ID" }}
+          resourceGroup: $AZ_RESOURCE_GROUP
+          tenantId: $AZ_TENANT_ID
+          subscriptionId: $AZ_SUBSCRIPTION_ID
           useManagedIdentityExtension: true
-        logLevel: {{ env "EXTERNALDNS_LOG_LEVEL" | default "debug" }}
+        logLevel: $EXTERNALDNS_LOG_LEVEL
         domainFilters:
-          - {{ requiredEnv "AZ_DNS_DOMAIN" }}
+          - $AZ_DNS_DOMAIN
         txtOwnerId: external-dns
 
   - name: ingress-nginx
-    namespace: {{ requiredEnv "NAMESPACE_KUBEADDONS" }}
+    namespace: $NAMESPACE_KUBEADDONS
     chart: ingress-nginx/ingress-nginx
-    version: 3.34.0
+    # version: 3.34.0
     values:
       - controller:
           replicaCount: 2
@@ -50,13 +50,13 @@ releases:
             kubernetes.io/os: linux
 
   - name: cert-manager
-    namespace: {{ requiredEnv "NAMESPACE_KUBEADDONS" }}
+    namespace: $NAMESPACE_KUBEADDONS
     chart: jetstack/cert-manager
-    version: 1.4.0
+    # version: 1.4.0
     values:
       - installCRDs: true
         extraArgs:
-          - --cluster-resource-namespace={{ requiredEnv "NAMESPACE_KUBEADDONS" }}
+          - --cluster-resource-namespace=$NAMESPACE_KUBEADDONS
         global:
           logLevel: 2
 EOF
@@ -65,12 +65,12 @@ EOF
 # Apply and cleanup
 #-----------------------------------------------------------------------------
 helmfile apply
-rm helmfile.yml
+rm helmfile.yaml
 
 #-----------------------------------------------------------------------------
 # Install cert-manager clusterissuers
 #-----------------------------------------------------------------------------
-cat <<-EOF >helmfile.yml
+cat <<-EOF >helmfile.yaml
 repositories:
   - name: itscontained
     url: https://charts.itscontained.io
@@ -78,8 +78,8 @@ repositories:
 releases:
   - name: cert-manager-issuers
     chart: itscontained/raw
-    namespace: {{ requiredEnv "NAMESPACE_KUBEADDONS" }}
-    version:  0.2.5
+    namespace: $NAMESPACE_KUBEADDONS
+    # version:  0.2.5
     ## only required if releases included in same helmfile
     ## otherwise, comment out
     # needs:
@@ -94,15 +94,15 @@ releases:
             spec:
               acme:
                 server: https://acme-staging-v02.api.letsencrypt.org/directory
-                email: {{ requiredEnv "ACME_ISSUER_EMAIL" }}
+                email: $ACME_ISSUER_EMAIL
                 privateKeySecretRef:
                   name: letsencrypt-staging
                 solvers:
                   - dns01:
                       azureDNS:
-                        subscriptionID: {{ requiredEnv "AZ_SUBSCRIPTION_ID" }}
-                        resourceGroupName: {{ requiredEnv "AZ_RESOURCE_GROUP" }}
-                        hostedZoneName: {{ requiredEnv "AZ_DNS_DOMAIN" }}
+                        subscriptionID: $AZ_SUBSCRIPTION_ID
+                        resourceGroupName: $AZ_RESOURCE_GROUP
+                        hostedZoneName: $AZ_DNS_DOMAIN
                         environment: AzurePublicCloud
 
           - apiVersion: cert-manager.io/v1
@@ -112,19 +112,20 @@ releases:
             spec:
               acme:
                 server: https://acme-v02.api.letsencrypt.org/directory
-                email: {{ requiredEnv "ACME_ISSUER_EMAIL" }}
+                email: $ACME_ISSUER_EMAIL
                 privateKeySecretRef:
                   name: letsencrypt-prod
                 solvers:
                   - dns01:
                       azureDNS:
-                        subscriptionID: {{ requiredEnv "AZ_SUBSCRIPTION_ID" }}
-                        resourceGroupName: {{ requiredEnv "AZ_RESOURCE_GROUP" }}
-                        hostedZoneName: {{ requiredEnv "AZ_DNS_DOMAIN" }}
+                        subscriptionID: $AZ_SUBSCRIPTION_ID
+                        resourceGroupName: $AZ_RESOURCE_GROUP
+                        hostedZoneName: $AZ_DNS_DOMAIN
                         environment: AzurePublicCloud
 EOF
 #-----------------------------------------------------------------------------
 # Apply and cleanup
 #-----------------------------------------------------------------------------
 helmfile apply
-rm helmfile.yml
+rm helmfile.yaml
+set +x

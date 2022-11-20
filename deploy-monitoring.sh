@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
-
+set -x
 #-----------------------------------------------------------------------------
 #### Prometheus
 #-----------------------------------------------------------------------------
@@ -9,7 +9,7 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 # Update local repositories
 helm repo update
 # Search for newly installed repositories
-helm repo list
+# helm repo list
 # Create a namespace for Prometheus and Grafana resources
 kubectl create ns $NAMESPACE_MONITORING
 # Install Prometheus using HELM
@@ -27,3 +27,4 @@ kubectl get secret -n $NAMESPACE_MONITORING prometheus-grafana -o=jsonpath='{.da
 # Get the Password
 kubectl get secret -n $NAMESPACE_MONITORING prometheus-grafana -o=jsonpath='{.data.admin-password}' | base64 -d
 # Port forward the Grafana service
+set +x

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
-
+set -x
 #-----------------------------------------------------------------------------
 #### nginx
 #-----------------------------------------------------------------------------
@@ -14,3 +14,4 @@ helm upgrade --install $DIST ingress-nginx \
   --set-string controller.podAnnotations."prometheus\.io/port"="10254" \
   --set prometheus.prometheusSpec.podMonitorSelectorNilUsesHelmValues=false \
   --set prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues=false
+set +x

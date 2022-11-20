@@ -36,3 +36,4 @@ kubectl create secret generic azure-config-file \
   --from-file azure.json
 
 kubectl apply -f external-dns.yml
+set +x

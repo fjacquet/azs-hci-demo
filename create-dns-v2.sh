@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
-
+set -x
 #-----------------------------------------------------------------------------
 ####  DNS area
 #-----------------------------------------------------------------------------
 
 az network dns zone create \
-  --resource-group ${AZ_RESOURCE_GROUP_DNS} \
+  --resource-group ${AZ_RESOURCE_GROUP} \
   --name ${AZ_DNS_DOMAIN}
 
 az network dns zone list \
@@ -26,7 +26,7 @@ export AZ_DNS_SCOPE=$(
 # Fetch Kubelet identity, i.e. managed identity assigned to node pools managed by VMSS
 #-----------------------------------------------------------------------------
 export AZ_PRINCIPAL_ID=$(
-  az aks show -g $RESOURCE_GROUP_AKS -n $AKS_CLUSTER_NAME \
+  az aks show -g $AZ_RESOURCE_GROUP -n $AKS_CLUSTER_NAME \
     --query "identityProfile.kubeletidentity.objectId" \
     --output tsv
 )
@@ -48,28 +48,34 @@ az role assignment list --assignee $AZ_PRINCIPAL_ID --all \
   --output table | sed 's|/subscriptions.*providers/||' | cut -c -80
 
 #-----------------------------------------------------------------------------
+# create namespace
+#-----------------------------------------------------------------------------
+echo "check namespace $NAMESPACE_KUBEADDONS"
+kubectl create namespace $NAMESPACE_KUBEADDONS 2>/dev/null
+
+#-----------------------------------------------------------------------------
 # Generate file
 #-----------------------------------------------------------------------------
-cat <<-EOF >helmfile.yml
+cat <<-EOF >helmfile.yaml
 repositories:
   - name: bitnami
     url: https://charts.bitnami.com/bitnami
 
 releases:
   - name: external-dns
-    namespace: {{ requiredEnv "NAMESPACE_KUBEADDONS" }}
+    namespace: $NAMESPACE_KUBEADDONS
     chart: bitnami/external-dns
-    version: 5.1.1
+    # version: 5.1.1
     values:
       - provider: azure
         azure:
-          resourceGroup: {{ requiredEnv "AZ_RESOURCE_GROUP" }}
-          tenantId: {{ requiredEnv "AZ_TENANT_ID" }}
-          subscriptionId: {{ requiredEnv "AZ_SUBSCRIPTION_ID" }}
+          resourceGroup: $AZ_RESOURCE_GROUP
+          tenantId: $AZ_TENANT_ID
+          subscriptionId: $AZ_SUBSCRIPTION_ID
           useManagedIdentityExtension: true
-        logLevel: {{ env "EXTERNALDNS_LOG_LEVEL" | default "debug" }}
+        logLevel: $EXTERNALDNS_LOG_LEVEL
         domainFilters:
-          - {{ requiredEnv "AZ_DNS_DOMAIN" }}
+          - $AZ_DNS_DOMAIN
         txtOwnerId: external-dns
 EOF
 
@@ -77,8 +83,7 @@ EOF
 # Apply and cleanup
 #-----------------------------------------------------------------------------
 helmfile apply
-rm helmfile.yml
-
+#rm helmfile.yaml
 #-----------------------------------------------------------------------------
 # get DNS secret
 #-----------------------------------------------------------------------------
@@ -100,3 +105,4 @@ EXTERNAL_DNS_POD_NAME=$(
 )
 
 kubectl logs --namespace $NAMESPACE_KUBEADDONS $EXTERNAL_DNS_POD_NAME
+set +x
