@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
-
+export ACME_ISSUER=letsencrypt-staging
 cat <<-EOF >helmfile.yml
 repositories:
   - name: itscontained
@@ -54,7 +54,7 @@ releases:
             metadata:
               name: hello-kubernetes
               annotations:
-                external-dns.alpha.kubernetes.io/hostname: hello.{{ requiredEnv "DNS_DOMAIN" }}
+                external-dns.alpha.kubernetes.io/hostname: hello.{{ requiredEnv "AZ_DNS_DOMAIN" }}
             spec:
               type: LoadBalancer
               ports:
@@ -63,10 +63,35 @@ releases:
               selector:
                 app: hello-kubernetes
 
+          - apiVersion: networking.k8s.io/v1
+            kind: Ingress
+            metadata:
+              name: hello-kubernetes
+              annotations:
+                kubernetes.io/ingress.class: nginx
+                cert-manager.io/cluster-issuer: {{ requiredEnv "ACME_ISSUER" }}
+            spec:
+              tls:
+                - hosts:
+                    - hello.{{ requiredEnv "AZ_DNS_DOMAIN" }}
+                  secretName: tls-secret
+              rules:
+              - host: hello.{{ requiredEnv "AZ_DNS_DOMAIN" }}
+                http:
+                  paths:
+                  - backend:
+                      service:
+                        name: hello-kubernetes
+                        port:
+                          number: 80
+                    path: /
+                    pathType: ImplementationSpecific
+
 EOF
 #-----------------------------------------------------------------------------
 # Apply and cleanup
 #-----------------------------------------------------------------------------
+
 helmfile apply
 rm helmfile.yml
 #-----------------------------------------------------------------------------
@@ -75,7 +100,10 @@ rm helmfile.yml
 JMESPATH="[?type=='Microsoft.Network/dnszones/A'] | [].{Name:name,Record:aRecords[0].ipv4Address,TTL:ttl}"
 
 az network dns record-set list \
-  --resource-group $DNS_RESOURCE_GROUP \
-  --zone-name $DNS_DOMAIN \
+  --resource-group $AZ_RESOURCE_GROUP \
+  --zone-name $AZ_DNS_DOMAIN \
   --output table \
   --query "$JMESPATH"
+
+kubectl describe ingress --namespace hello
+kubectl describe certificate --namespace hello

@@ -4,7 +4,7 @@ repositories:
 
 releases:
   - name: external-dns
-    namespace: kube-addons
+    namespace: {{ requiredEnv "NAMESPACE_KUBEADDONS" }}
     chart: bitnami/external-dns
     version: 5.1.1
     values:
@@ -16,5 +16,5 @@ releases:
           useManagedIdentityExtension: true
         logLevel: {{ env "EXTERNALDNS_LOG_LEVEL" | default "debug" }}
         domainFilters:
-          - {{ requiredEnv "AZ_DNS_DOMAIN" }}
+          - {{ requiredEnv "AZ_AZ_DNS_DOMAIN" }}
         txtOwnerId: external-dns

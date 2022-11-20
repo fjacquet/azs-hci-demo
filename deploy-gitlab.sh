@@ -11,8 +11,8 @@ kubectl create secret generic gitlab-postgresql-password \
   --from-literal=postgresql-postgres-password=$(head -c 512 /dev/urandom | LC_CTYPE=C tr -cd 'a-zA-Z0-9' | head -c 64)
 
 helm upgrade --install gitlab gitlab/gitlab \
-  --set global.hosts.domain=$DNS_DOMAIN \
-  --set certmanager-issuer.email=$EMAIL \
+  --set global.hosts.domain=$AZ_DNS_DOMAIN \
+  --set certmanager-issuer.ACME_ISSUER_EMAIL=$ACME_ISSUER_EMAIL \
   --set postgresql.install=false \
   --set global.psql.host=psql.example \
   --set global.psql.password.secret=gitlab-postgresql-password \

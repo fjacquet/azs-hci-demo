@@ -3,11 +3,13 @@
 . ./setenv.sh
 
 . ./register-provider.sh
+
 . ./create-rg.sh
 . ./create-aks.sh
 . ./create-dns-v2.sh
 . ./create-pip.sh
 
+. ./deploy-cert.sh
 . ./deploy-hello.sh
 . ./deploy-db.sh
 . ./deploy-wikijs.sh

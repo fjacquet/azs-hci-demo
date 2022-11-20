@@ -12,8 +12,8 @@ EXTERNALDNS_NEW_SP_NAME="ExternalDnsServicePrincipal"
 DNS_SP=$(az ad sp create-for-rbac --name $EXTERNALDNS_NEW_SP_NAME)
 EXTERNALDNS_SP_APP_ID=$(echo $DNS_SP | jq -r '.appId')
 EXTERNALDNS_SP_PASSWORD=$(echo $DNS_SP | jq -r '.password')
-DNS_ID=$(az network dns zone show --name $DNS_DOMAIN \
-  --resource-group $DNS_RESOURCE_GROUP \
+DNS_ID=$(az network dns zone show --name $AZ_DNS_DOMAIN \
+  --resource-group $AZ_RESOURCE_GROUP \
   --query "id" \
   --output tsv)
 

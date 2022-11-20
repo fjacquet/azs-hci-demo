@@ -5,7 +5,7 @@
 ####  AKS
 #-----------------------------------------------------------------------------
 az aks create \
-  --resource-group $AKS_RESOURCE_GROUP \
+  --resource-group $RESOURCE_GROUP_AKS \
   --name $AKS_CLUSTER_NAME \
   --node-count $AKS_COUNT \
   --node-vm-size $AKS_SIZE \
@@ -16,7 +16,8 @@ az aks create \
   --generate-ssh-keys
 
 # Create .kubeconfig
-az aks get-credentials --resource-group $AKS_RESOURCE_GROUP \
+az aks get-credentials \
+  --resource-group $RESOURCE_GROUP_AKS \
   --name $AKS_CLUSTER_NAME
 
 kubectl get nodes
@@ -24,5 +25,5 @@ kubectl create clusterrolebinding yb-kubernetes-dashboard \
   --clusterrole=cluster-admin \
   --serviceaccount=kube-system:kubernetes-dashboard \
   --user=clusterUser
-az aks browse --resource-group $AKS_RESOURCE_GROUP \
+az aks browse --resource-group $RESOURCE_GROUP_AKS \
   --name $AKS_CLUSTER_NAME
