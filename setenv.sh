@@ -11,12 +11,13 @@ AZ_SUBSCRIPTION_ID=$(az account show --query id --output tsv)
 AZ_TENANT_ID=$(az account show --query tenantId --output tsv)
 DIST=lab
 EXTERNALDNS_LOG_LEVEL=debug
+NAMESPACE_EXTERNALDNS=external-dns
 NAMESPACE_INGRESS=ingress-nginx
 NAMESPACE_KUBEAPPS=kubeapps
 NAMESPACE_KUBEADDONS=kube-addons
 NAMESPACE_MONITORING=monitoring
 NAMESPACE_WIKIJS=wikijs
-NAMESPACE_YUGA=yubabyte
+NAMESPACE_YUGA=yugabyte
 REGION=switzerlandnorth
 
 export ACME_ISSUER_EMAIL
@@ -26,6 +27,7 @@ export AZ_RESOURCE_GROUP
 export AZ_SUBSCRIPTION_ID
 export AZ_TENANT_ID
 export EXTERNALDNS_LOG_LEVEL
+export NAMESPACE_EXTERNALDNS
 export NAMESPACE_INGRESS
 export NAMESPACE_KUBEAPPS
 export NAMESPACE_KUBEADDONS

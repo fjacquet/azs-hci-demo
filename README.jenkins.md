@@ -20,11 +20,9 @@ Watch the status using:
 kubectl get svc --namespace default -w my-release-jenkins
 ```
 
-
 1. Get the Jenkins URL by running:
 
 **Please ensure an external IP is associated to the my-release-jenkins service before proceeding**
-
 
 ```bash
   export SERVICE_IP=$(kubectl get svc --namespace default my-release-jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")

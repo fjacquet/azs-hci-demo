@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
-az config set extension.use_dynamic_install=yes_without_prompt
+
 . ./setenv.sh
 
 . ./register-provider.sh
 
 . ./create-rg.sh
 . ./create-aks.sh
-. ./create-dns-v2.sh
+. ./create-dns-v3.sh
 . ./create-pip.sh
 
+. ./deploy-nginx.sh
 . ./deploy-certmgr.sh
 . ./deploy-hello.sh
 . ./deploy-db.sh

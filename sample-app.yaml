@@ -1,7 +1,3 @@
-#!/usr/bin/env bash
-# -*- coding: utf-8 -*-
-set -x
-cat <<-EOF >sample-app.yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -43,7 +39,7 @@ metadata:
     kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
-    - host: "sample.$AZ_DNS_DOMAIN"
+    - host: "sample.aks.ez-lab.xyz"
       http:
         paths:
           - path: /
@@ -53,7 +49,3 @@ spec:
                 name: web
                 port:
                   number: 8080
-EOF
-kubectl apply -f sample-app.yaml
-rm sample-app.yaml
-set +x

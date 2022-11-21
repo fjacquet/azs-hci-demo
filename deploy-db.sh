@@ -26,4 +26,27 @@ helm install yb-demo -n $NAMESPACE_YUGA yugabytedb/yugabyte \
 
 kubectl get pods --namespace $NAMESPACE_YUGA
 kubectl get services --namespace $NAMESPACE_YUGA
+
+cat <<-EOF >yuga-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: yuga-rule
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+    - host: "db.$AZ_DNS_DOMAIN"
+      http:
+        paths:
+          - path: /
+            pathType: "Prefix"
+            backend:
+              service:
+                name: yb-master-ui.$NAMESPACE_YUGA
+                port:
+                  number: 7000
+EOF
+kubectl apply -f yuga-ingress.yaml
+rm yuga-ingress.yaml
 set +x
