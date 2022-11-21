@@ -4,20 +4,15 @@ set -x
 ####  ressource group
 #-----------------------------------------------------------------------------
 az group create \
-  --name $AZ_RESOURCE_GROUP \
-  --location switzerlandwest
+--name $AZ_RESOURCE_GROUP \
+--location switzerlandwest
 # oups ...
 
 ####  ressource group for aks
 #-----------------------------------------------------------------------------
 az group create \
-  --name $AZ_RESOURCE_GROUP \
-  --location $REGION
+--name $AZ_RESOURCE_GROUP \
+--location $REGION
 # add provider
-
-####  ressource group for dns
-#-----------------------------------------------------------------------------
-az group create --name $AZ_RESOURCE_GROUP \
-  --location $REGION
 
 set +x

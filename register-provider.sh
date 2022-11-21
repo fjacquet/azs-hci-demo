@@ -3,10 +3,16 @@
 set -x
 ####  permission for provider
 #-----------------------------------------------------------------------------
+az feature register --name EnablePodIdentityPreview --namespace Microsoft.ContainerService
+az feature register --name AutoUpgradePreview --namespace Microsoft.ContainerService
 az provider register --namespace Microsoft.Network --wait
 az provider register --namespace Microsoft.Compute --wait
 az provider register --namespace Microsoft.Storage --wait
 az provider register --namespace Microsoft.ContainerService --wait
+
+az extension add --name aks-preview
+az extension update --name aks-preview
+az provider register --namespace Microsoft.ContainerService
 
 # Define public Kubernetes chart repository in the Helm configuration
 helm repo add bitnami https://charts.bitnami.com/bitnami
