@@ -5,8 +5,7 @@ set -x
 #### Yugabyte storage
 #-----------------------------------------------------------------------------
 set -x
-helm repo add yugabytedb https://charts.yugabyte.com
-helm repo update
+
 helm search repo yugabytedb/yugabyte --version 2.15.3
 kubectl create namespace $NAMESPACE_YUGA
 helm install yb-demo -n $NAMESPACE_YUGA yugabytedb/yugabyte \

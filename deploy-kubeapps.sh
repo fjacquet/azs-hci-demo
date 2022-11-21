@@ -4,8 +4,7 @@ set -x
 #-----------------------------------------------------------------------------
 #### Kubeapps
 #-----------------------------------------------------------------------------
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm repo update
+
 helm upgrade --install -n $NAMESPACE_KUBEAPPS --create-namespace $NAMESPACE_KUBEAPPS bitnami/kubeapps
 
 kubectl create --namespace default serviceaccount kubeapps-operator

@@ -57,9 +57,6 @@ kubectl create namespace $NAMESPACE_KUBEADDONS 2>/dev/null
 # Generate file
 #-----------------------------------------------------------------------------
 cat <<-EOF >helmfile.yaml
-repositories:
-  - name: bitnami
-    url: https://charts.bitnami.com/bitnami
 
 releases:
   - name: external-dns
@@ -83,7 +80,7 @@ EOF
 # Apply and cleanup
 #-----------------------------------------------------------------------------
 helmfile apply
-#rm helmfile.yaml
+rm helmfile.yaml
 #-----------------------------------------------------------------------------
 # get DNS secret
 #-----------------------------------------------------------------------------

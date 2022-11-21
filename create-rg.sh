@@ -19,7 +19,5 @@ az group create \
 #-----------------------------------------------------------------------------
 az group create --name $AZ_RESOURCE_GROUP \
   --location $REGION
-az network dns zone create \
-  --resource-group $AZ_RESOURCE_GROUP \
-  --name $AZ_DNS_DOMAIN
+
 set +x

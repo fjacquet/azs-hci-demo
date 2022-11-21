@@ -4,8 +4,7 @@ set -x
 export ACME_ISSUER=letsencrypt-staging
 cat <<-EOF >helmfile.yaml
 repositories:
-  - name: itscontained
-    url: https://charts.itscontained.io
+
 
 releases:
   - name: hello-kubernetes

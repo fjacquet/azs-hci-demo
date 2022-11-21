@@ -4,8 +4,7 @@ set -x
 #-----------------------------------------------------------------------------
 #### wikijs
 #-----------------------------------------------------------------------------
-helm repo add requarks https://charts.js.wiki
-helm repo
+
 # connect to DB
 kubectl run ysqlsh-client -it --rm --image yugabytedb/yugabyte-client \
   --command -- ysqlsh -h yb-tservers.$AZ_RESOURCE_GROUP.svc.cluster.local

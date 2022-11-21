@@ -4,8 +4,7 @@ set -x
 #-----------------------------------------------------------------------------
 #### gitlab
 #-----------------------------------------------------------------------------
-helm repo add gitlab https://charts.gitlab.io/
-helm repo update
+
 kubectl create secret generic gitlab-postgresql-password \
   --from-literal=postgresql-password=$(head -c 512 /dev/urandom | LC_CTYPE=C tr -cd 'a-zA-Z0-9' | head -c 64) \
   --from-literal=postgresql-postgres-password=$(head -c 512 /dev/urandom | LC_CTYPE=C tr -cd 'a-zA-Z0-9' | head -c 64)
