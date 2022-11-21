@@ -5,7 +5,9 @@ set -x
 #### Kubeapps
 #-----------------------------------------------------------------------------
 
-helm upgrade --install -n $NAMESPACE_KUBEAPPS --create-namespace $NAMESPACE_KUBEAPPS bitnami/kubeapps
+helm upgrade --install bitnami/kubeapps \
+  -n $NAMESPACE_KUBEAPPS \
+  --create-namespace $NAMESPACE_KUBEAPPS
 
 kubectl create --namespace default serviceaccount kubeapps-operator
 kubectl create clusterrolebinding kubeapps-operator \

@@ -5,9 +5,26 @@ set -x
 #### Prometheus
 #-----------------------------------------------------------------------------
 
-
 # Create a namespace for Prometheus and Grafana resources
-kubectl create ns $NAMESPACE_MONITORING
+kubectl create namespace $NAMESPACE_MONITORING
+
+helm install prometheus-operator \
+  prometheus-community/kube-prometheus-stack \
+  -f values-monitoring.yaml \
+  --namespace $NAMESPACE_MONITORING
+
+kubectl -n $NAMESPACE_MONITORING get all -l "release=prometheus-operator"
+
+# Check to see that all the Pods are running
+kubectl get pods -n monitoring
+
+# Other Useful Prometheus Operator Resources to Peruse
+kubectl get prometheus -n $NAMESPACE_MONITORING
+kubectl get prometheusrules -n $NAMESPACE_MONITORING
+kubectl get servicemonitor -n $NAMESPACE_MONITORING
+kubectl get cm -n $NAMESPACE_MONITORING
+kubectl get secrets -n $NAMESPACE_MONITORING
+
 # Install Prometheus using HELM
 helm upgrade --install $DIST prometheus-community/kube-prometheus-stack -n $NAMESPACE_MONITORING \
   --set kubeEtcd.enabled=false \

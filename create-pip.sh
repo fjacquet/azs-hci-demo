@@ -6,7 +6,7 @@ set -x
 #-----------------------------------------------------------------------------
 az network public-ip create \
   --resource-group $AZ_RESOURCE_GROUP \
-  --name myAKSPublicIP \
+  --name $AZ_RESOURCE_GROUP-public-ip \
   --sku Standard \
   --allocation-method static
 

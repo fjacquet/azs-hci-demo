@@ -8,6 +8,7 @@ set -x
 
 helm search repo yugabytedb/yugabyte --version 2.15.3
 kubectl create namespace $NAMESPACE_YUGA
+
 helm install yb-demo -n $NAMESPACE_YUGA yugabytedb/yugabyte \
   --version 2.15.3 \
   --set storage.master.count=3 \
@@ -22,6 +23,7 @@ helm install yb-demo -n $NAMESPACE_YUGA yugabytedb/yugabyte \
   --set resource.master.limits.memory=1Gi \
   --set resource.tserver.limits.cpu=1 \
   --set resource.tserver.limits.memory=1Gi \
+  --set domainName=db.$AZ_DNS_DOMAIN \
   --timeout=15m
 
 kubectl get pods --namespace $NAMESPACE_YUGA

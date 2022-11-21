@@ -26,6 +26,7 @@ helm repo add jetstack https://charts.jetstack.io
 helm repo add nginx https://kubernetes.github.io/ingress-nginx
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo add requarks https://charts.js.wiki
+helm repo add stable https://charts.helm.sh/stable
 helm repo add yugabytedb https://charts.yugabyte.com
 # helm repo add itscontained https://charts.itscontained.io
 

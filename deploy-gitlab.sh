@@ -13,14 +13,18 @@ helm upgrade --install gitlab gitlab/gitlab \
   --set global.hosts.domain=$AZ_DNS_DOMAIN \
   --set certmanager-issuer.ACME_ISSUER_EMAIL=$ACME_ISSUER_EMAIL \
   --set postgresql.install=false \
-  --set global.psql.host=psql.example \
+  --set global.psql.host=yb-tserver-service.$NAMESPACE_YUGA.svc.cluster.local \
   --set global.psql.password.secret=gitlab-postgresql-password \
   --set global.psql.password.key=postgres-password \
   --set global.psql.port: 5433 \
   --set global.psql.database: gitlab \
-  --set global.psql.username: yugabyte
+  --set global.psql.username: yugabyte \
+  --set redis.install=false \
+  --set global.redis.host=redis.$NAMESPACE_YUGA.svc.cluster.local \
+  --set global.redis.password.secret=gitlab-redis \
+  --set global.redis.password.key=redis-password \
+  kubectl get ingress -lrelease=gitlab
 
-kubectl get ingress -lrelease=gitlab
 kubectl get secret gitlab-gitlab-initial-root-password -ojsonpath='{.data.password}' | base64 --decode
 # echo
 set +x
