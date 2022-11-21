@@ -19,13 +19,6 @@ az aks get-credentials \
   --resource-group $AZ_RESOURCE_GROUP \
   --name $AKS_CLUSTER_NAME
 
-#-----------------------------------------------------------------------------
-# create namespace
-#-----------------------------------------------------------------------------
-echo "check namespace $NAMESPACE_KUBEADDONS"
-kubectl create namespace $NAMESPACE_KUBEADDONS 2>/dev/null
-kubectl create namespace $NAMESPACE_WIKIJS 2>/dev/null
-
 # kubectl get nodes
 # kubectl create clusterrolebinding yb-kubernetes-dashboard \
 #   --clusterrole=cluster-admin \

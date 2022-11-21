@@ -5,12 +5,10 @@ set -x
 #### Prometheus
 #-----------------------------------------------------------------------------
 
-# Create a namespace for Prometheus and Grafana resources
-kubectl create namespace $NAMESPACE_MONITORING
-
 helm install prometheus-operator \
   prometheus-community/kube-prometheus-stack \
   -f values-monitoring.yaml \
+  --create-namespace \
   --namespace $NAMESPACE_MONITORING
 
 kubectl -n $NAMESPACE_MONITORING get all -l "release=prometheus-operator"

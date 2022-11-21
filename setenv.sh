@@ -11,6 +11,7 @@ AZ_SUBSCRIPTION_ID=$(az account show --query id --output tsv)
 AZ_TENANT_ID=$(az account show --query tenantId --output tsv)
 DIST=lab
 EXTERNALDNS_LOG_LEVEL=debug
+NAMESPACE_CERTMGR=cert-manager
 NAMESPACE_EXTERNALDNS=external-dns
 NAMESPACE_INGRESS=ingress-nginx
 NAMESPACE_KUBEAPPS=kubeapps
@@ -27,6 +28,7 @@ export AZ_RESOURCE_GROUP
 export AZ_SUBSCRIPTION_ID
 export AZ_TENANT_ID
 export EXTERNALDNS_LOG_LEVEL
+export NAMESPACE_CERTMGR
 export NAMESPACE_EXTERNALDNS
 export NAMESPACE_INGRESS
 export NAMESPACE_KUBEAPPS

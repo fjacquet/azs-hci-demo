@@ -6,11 +6,9 @@ set -x
 #-----------------------------------------------------------------------------
 set -x
 
-helm search repo yugabytedb/yugabyte --version 2.15.3
-kubectl create namespace $NAMESPACE_YUGA
-
 helm install yb-demo -n $NAMESPACE_YUGA yugabytedb/yugabyte \
   --version 2.15.3 \
+  --create-namespace \
   --set storage.master.count=3 \
   --set storage.tserver.count=3 \
   --set storage.master.storageClass=default \

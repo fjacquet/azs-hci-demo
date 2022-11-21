@@ -38,13 +38,11 @@ az role assignment create --role "Contributor" \
   --assignee $EXTERNALDNS_SP_APP_ID \
   --scope $DNS_ID
 
-# Create Kubernetes namespace for External-DNS
-kubectl create namespace externaldns
-
 # Create tailored External-DNS deployment
 
 helm install external-dns bitnami/external-dns \
   --wait \
+  --create-namespace \
   --namespace $NAMESPACE_EXTERNALDNS \
   --set txtOwnerId=$AKS_CLUSTER_NAME \
   --set provider=azure \

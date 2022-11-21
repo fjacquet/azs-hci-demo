@@ -5,12 +5,10 @@ set -x
 #### nginx
 #-----------------------------------------------------------------------------
 
-# Create Kubernetes namespace
-kubectl create namespace $NAMESPACE_INGRESS
-
 # Deploy ingress to Kubernetes
 helm upgrade --install nginx-ingress nginx/ingress-nginx \
   --wait \
+  --create-namespace \
   --namespace $NAMESPACE_INGRESS \
   --set controller.metrics.enabled=true \
   --set controller.metrics.serviceMonitor.enabled=true \

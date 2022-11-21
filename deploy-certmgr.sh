@@ -4,7 +4,7 @@ set -x
 
 helm install \
   cert-manager jetstack/cert-manager \
-  --namespace cert-manager \
+  --namespace $NAMESPACE_CERTMGR \
   --create-namespace \
   --version v1.10.1 \
   --set installCRDs=true \

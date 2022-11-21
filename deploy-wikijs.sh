@@ -10,7 +10,9 @@ kubectl run ysqlsh-client -it --rm --image yugabytedb/yugabyte-client \
   --command -- echo "create database wikijs;" | ysqlsh -h yb-tservers.$NAMESPACE_YUGA.svc.cluster.local
 # create DB
 # create database wikijs
-helm upgrade --install $DIST requarks/wiki -n $NAMESPACE_WIKIJS \
+helm upgrade --install $DIST requarks/wiki \
+  --create-namespace \
+  -n $NAMESPACE_WIKIJS \
   --set postgresql.enabled=false \
   --set ingres.enabled=true \
   --set ingress.annotations='{"kubernetes.io/ingress.class": "nginx"}' \
