@@ -1,18 +1,19 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: yuga-rule
+  name: wiki-rule
+  namespace: wikijs
   annotations:
     kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
-    - host: "db.aks.ez-lab.xyz"
+    - host: "wiki.aks.ez-lab.xyz"
       http:
         paths:
           - path: /
             pathType: "Prefix"
             backend:
               service:
-                name: "yb-master-ui.yubabyte.svc.cluster.local"
+                name: lab-wiki
                 port:
-                  number: 7000
+                  number: 3000

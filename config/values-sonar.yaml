@@ -1,0 +1,297 @@
+affinity: {}
+args: []
+autoscaling:
+  enabled: false
+  maxReplicas: 11
+  minReplicas: 1
+  targetCPU: 50
+  targetMemory: 50
+clusterDomain: cluster.local
+command: []
+commonAnnotations: {}
+commonLabels: {}
+containerPorts:
+  elastic: 9001
+  http: 9000
+containerSecurityContext:
+  enabled: true
+  runAsNonRoot: true
+  runAsUser: 1001
+customLivenessProbe: {}
+customReadinessProbe: {}
+customStartupProbe: {}
+diagnosticMode:
+  args:
+    - infinity
+  command:
+    - sleep
+  enabled: false
+existingSecret: ""
+externalDatabase:
+  database: sonarqube
+  existingSecret: ""
+  host: "yb-tserver-service.yugabyte.svc.cluster.local"
+  password: "aks"
+  port: 5433
+  user: aks
+extraDeploy: []
+extraEnvVars: []
+extraEnvVarsCM: ""
+extraEnvVarsSecret: ""
+extraProperties: []
+extraVolumeMounts: []
+extraVolumes: []
+fullnameOverride: ""
+global:
+  imagePullSecrets: []
+  imageRegistry: ""
+  storageClass: ""
+hostAliases: []
+image:
+  debug: false
+  digest: ""
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+  registry: docker.io
+  repository: bitnami/sonarqube
+  tag: 9.7.1-debian-11-r0
+ingress:
+  annotations: {}
+  apiVersion: ""
+  enabled: true
+  extraHosts: []
+  extraPaths: []
+  extraRules: []
+  extraTls: []
+  hostname: sonarqube.aks.ez-lab.xyz
+  ingressClassName: nginx
+  path: /
+  pathType: ImplementationSpecific
+  secrets: []
+  selfSigned: true
+  tls: true
+initContainers: []
+kubeVersion: ""
+ldap:
+  StartTLS: false
+  authentication: simple
+  bindDn: ""
+  bindPassword: ""
+  contextFactoryClass: com.sun.jndi.ldap.LdapCtxFactory
+  followReferrals: true
+  group:
+    baseDn: ""
+    idAttribute: cn
+    request: (&(objectClass=groupOfUniqueNames)(uniqueMember={dn}))
+  realm: ""
+  url: ""
+  user:
+    baseDn: ""
+    emailAttribute: mail
+    realNameAttribute: cn
+    request: (&(objectClass=inetOrgPerson)(uid={login}))
+lifecycleHooks: {}
+livenessProbe:
+  enabled: true
+  failureThreshold: 6
+  initialDelaySeconds: 100
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 5
+maxHeapSize: 2048m
+metrics:
+  jmx:
+    configuration: >-
+      jmxUrl: service:jmx:rmi:///jndi/rmi://127.0.0.1:10443/jmxrmi
+
+      lowercaseOutputName: true
+
+      lowercaseOutputLabelNames: true
+
+      ssl: false
+
+      {{- if .Values.metrics.jmx.whitelistObjectNames }}
+
+      whitelistObjectNames: ["{{ join "\",\""
+      .Values.metrics.jmx.whitelistObjectNames }}"]
+
+      {{- end }}
+
+      rules:
+
+      - pattern: java.lang<type=(.+), name=(.+)><(.+)>(\w+)
+        name: java_lang_$1_$4_$3_$2
+      - pattern: java.lang<type=(.+), name=(.+)><>(\w+)
+        name: java_lang_$1_$3_$2
+      - pattern: java.lang<type=(.*)>
+
+      - pattern: SonarQube<name=(.+)><>(\w+)
+        name: sonarqube_$1_$2
+      - pattern: Tomcat<type=(.+), name=(.+)><>(\w+)
+        name: tomcat_$1_$3_$2
+    containerPorts:
+      metrics: 10445
+    containerSecurityContext:
+      enabled: true
+      runAsNonRoot: true
+      runAsUser: 1001
+    enabled: false
+    image:
+      digest: ""
+      pullPolicy: IfNotPresent
+      pullSecrets: []
+      registry: docker.io
+      repository: bitnami/jmx-exporter
+      tag: 0.17.2-debian-11-r13
+    resources:
+      limits: {}
+      requests: {}
+    service:
+      annotations:
+        prometheus.io/path: /
+        prometheus.io/port: "{{ .Values.metrics.jmx.service.ports.metrics }}"
+        prometheus.io/scrape: "true"
+      ports:
+        metrics: 10443
+    whitelistObjectNames:
+      - java.lang:*
+      - SonarQube:*
+      - Tomcat:*
+  serviceMonitor:
+    enabled: false
+    interval: ""
+    jobLabel: ""
+    labels: {}
+    metricRelabelings: []
+    namespace: ""
+    relabelings: []
+    scrapeTimeout: ""
+    selector: {}
+minHeapSize: 1024m
+nameOverride: ""
+nodeAffinityPreset:
+  key: ""
+  type: ""
+  values: []
+nodeSelector: {}
+persistence:
+  accessModes:
+    - ReadWriteOnce
+  annotations: {}
+  dataSource: {}
+  enabled: true
+  existingClaim: ""
+  size: 10Gi
+  storageClass: ""
+podAffinityPreset: ""
+podAnnotations: {}
+podAntiAffinityPreset: soft
+podLabels: {}
+podSecurityContext:
+  enabled: true
+  fsGroup: 1001
+postgresql:
+  auth:
+    database: bitnami_sonarqube
+    existingSecret: ""
+    password: ""
+    username: bn_sonarqube
+  enabled: true
+  nameOverride: ""
+  persistence:
+    accessMode: ReadWriteOnce
+    enabled: true
+    existingClaim: ""
+    size: 8Gi
+    storageClass: ""
+  service:
+    ports:
+      postgresql: 5432
+priorityClassName: ""
+rbac:
+  create: false
+readinessProbe:
+  enabled: true
+  failureThreshold: 6
+  initialDelaySeconds: 100
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 5
+replicaCount: 1
+resources:
+  limits: {}
+  requests:
+    cpu: 100m
+    memory: 2048Mi
+schedulerName: ""
+service:
+  annotations: {}
+  clusterIP: ""
+  externalTrafficPolicy: Cluster
+  extraPorts: []
+  loadBalancerIP: ""
+  loadBalancerSourceRanges: []
+  nodePorts:
+    elastic: ""
+    http: ""
+  ports:
+    elastic: 9001
+    http: 80
+  sessionAffinity: None
+  sessionAffinityConfig: {}
+  type: LoadBalancer
+serviceAccount:
+  annotations: {}
+  automountServiceAccountToken: true
+  create: true
+  name: ""
+sidecars: []
+smtpExistingSecret: ""
+smtpHost: ""
+smtpPassword: ""
+smtpPort: ""
+smtpProtocol: ""
+smtpUser: ""
+sonarAuthenticatorDowncase: ""
+sonarSecurityRealm: ""
+sonarqubeEmail: user@example.com
+sonarqubePassword: ""
+sonarqubeSkipInstall: false
+sonarqubeUsername: user
+startTimeout: 150
+startupProbe:
+  enabled: false
+  failureThreshold: 15
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 1
+sysctl:
+  enabled: true
+  image:
+    digest: ""
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+    registry: docker.io
+    repository: bitnami/bitnami-shell
+    tag: 11-debian-11-r47
+  resources:
+    limits: {}
+    requests: {}
+tolerations: []
+updateStrategy:
+  type: RollingUpdate
+volumePermissions:
+  containerSecurityContext:
+    runAsUser: 0
+  enabled: false
+  image:
+    digest: ""
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+    registry: docker.io
+    repository: bitnami/bitnami-shell
+    tag: 11-debian-11-r47
+  resources:
+    limits: {}
+    requests: {}

@@ -18,6 +18,6 @@ APP VERSION: 0.13.1
 To verify that external-dns has started, run:
 
 ```bash
-kubectl --namespace=externaldns get pods -l "app.kubernetes.io/name=external-dns,app.kubernetes.io/instance=external-dns"
+kubectl --namespace=external-dns get pods -l "app.kubernetes.io/name=external-dns,app.kubernetes.io/instance=external-dns"
 
 ```

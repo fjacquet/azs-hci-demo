@@ -6,7 +6,16 @@ set -x
 #-----------------------------------------------------------------------------
 set -x
 
-helm install yb-demo -n $NAMESPACE_YUGA yugabytedb/yugabyte \
+# helm upgrade --install yb-demo yugabytedb/yugabyte \
+#   -n $NAMESPACE_YUGA \
+#   --version 2.15.3 \
+#   --create-namespace \
+#   -f config/values-yuga.yaml \
+#   --wait \
+#   --timeout=15m
+
+helm upgrade --install yb-demo yugabytedb/yugabyte \
+  -n $NAMESPACE_YUGA \
   --version 2.15.3 \
   --create-namespace \
   --set storage.master.count=3 \
@@ -21,32 +30,22 @@ helm install yb-demo -n $NAMESPACE_YUGA yugabytedb/yugabyte \
   --set resource.master.limits.memory=1Gi \
   --set resource.tserver.limits.cpu=1 \
   --set resource.tserver.limits.memory=1Gi \
-  --set domainName=db.$AZ_DNS_DOMAIN \
+  --wait \
   --timeout=15m
 
 kubectl get pods --namespace $NAMESPACE_YUGA
 kubectl get services --namespace $NAMESPACE_YUGA
 
-cat <<-EOF >yuga-ingress.yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: yuga-rule
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-spec:
-  rules:
-    - host: "db.$AZ_DNS_DOMAIN"
-      http:
-        paths:
-          - path: /
-            pathType: "Prefix"
-            backend:
-              service:
-                name: yb-master-ui.$NAMESPACE_YUGA
-                port:
-                  number: 7000
-EOF
-kubectl apply -f yuga-ingress.yaml
-rm yuga-ingress.yaml
+# connect to DB
+# kubectl run ysqlsh-client -n $NAMESPACE_YUGA -it \
+#   --rm --image yugabytedb/syugabyte-client \
+#   --command -- ysqlsh -h yb-tserver \
+#   -c "CREATE USER aks WITH PASSWORD 'aks';ALTER USER aks WITH SUPERUSER;"
+
+kubectl exec --namespace $NAMESPACE_YUGA \
+  -it yb-tserver-0 \
+  -- /home/yugabyte/bin/ysqlsh \
+  -h yb-tserver-0.yb-tservers.yugabyte \
+  -c "CREATE USER aks WITH PASSWORD 'aks';ALTER USER aks WITH SUPERUSER;"
+
 set +x

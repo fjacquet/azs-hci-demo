@@ -19,8 +19,8 @@ redis:
       cpu: 2000m
       memory: 2Gi
     requests:
-      cpu: 2000m
-      memory: 2Gi
+      cpu: 200m
+      memory: 1Gi
   useAOFPersistence: "no"
   configmap: |-
     save ""

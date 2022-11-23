@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 set -x
 
-helm install \
+helm upgrade --install \
   cert-manager jetstack/cert-manager \
   --namespace $NAMESPACE_CERTMGR \
   --create-namespace \
@@ -11,7 +11,7 @@ helm install \
   --set prometheus.enabled=true \
   --set prometheus.servicemonitor.enabled=true
 
-$ cat <<EOF >test-resources.yaml
+cat <<EOF >test-resources.yaml
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -32,7 +32,7 @@ metadata:
   namespace: cert-manager-test
 spec:
   dnsNames:
-    - example.com
+    - $AZ_DNS_DOMAIN
   secretName: selfsigned-cert-tls
   issuerRef:
     name: test-selfsigned

@@ -38,12 +38,12 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: sample-rule
+  name: hello-rule
   annotations:
     kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
-    - host: "sample.$AZ_DNS_DOMAIN"
+    - host: "hello.$AZ_DNS_DOMAIN"
       http:
         paths:
           - path: /

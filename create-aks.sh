@@ -20,10 +20,10 @@ az aks get-credentials \
   --name $AKS_CLUSTER_NAME
 
 # kubectl get nodes
-# kubectl create clusterrolebinding yb-kubernetes-dashboard \
-#   --clusterrole=cluster-admin \
-#   --serviceaccount=kube-system:kubernetes-dashboard \
-#   --user=clusterUser
+kubectl create clusterrolebinding yb-kubernetes-dashboard \
+  --clusterrole=cluster-admin \
+  --serviceaccount=kube-system:kubernetes-dashboard \
+  --user=clusterUser
 # az aks browse --resource-group $AZ_RESOURCE_GROUP \
 #   --name $AKS_CLUSTER_NAME
 
