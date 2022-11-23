@@ -36,7 +36,7 @@ helm upgrade --install gitlab gitlab/gitlab \
 
 kubectl get ingress -lrelease=gitlab \
   -n $NAMESPACE_GITLAB
-kubectl get secret gitlab-gitlab-initial-root-password -ojsonpath='{.data.username}' | base64 --decode
+
 kubectl get secret gitlab-gitlab-initial-root-password -ojsonpath='{.data.password}' | base64 --decode
 # echo
 set +x
