@@ -23,7 +23,7 @@ AZURE_DNS_ZONE=$AZ_AZ_DNS_DOMAIN
 DNS_SP=$(az ad sp create-for-rbac --name $EXTERNALDNS_NEW_SP_NAME -o json)
 EXTERNALDNS_SP_APP_ID=$(echo $DNS_SP | jq -r '.appId')
 EXTERNALDNS_SP_PASSWORD=$(echo $DNS_SP | jq -r '.password')
-
+kubectl create secret generic externadns-config --from-literal=client-secret=$EXTERNALDNS_SP_PASSWORD
 DNS_ID=$(az network dns zone show --name $AZ_DNS_DOMAIN \
   --resource-group $AZ_RESOURCE_GROUP \
   --query "id" --output tsv)
