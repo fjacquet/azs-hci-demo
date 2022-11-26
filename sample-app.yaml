@@ -1,7 +1,3 @@
-#!/usr/bin/env bash
-# -*- coding: utf-8 -*-
-set -x
-cat <<-EOF >sample-app.yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -48,10 +44,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-      - hello.$AZ_DNS_DOMAIN
+      - hello.aks.ez-lab.xyz
     secretName: hello-secret-tls
   rules:
-    - host: "hello.$AZ_DNS_DOMAIN"
+    - host: "hello.aks.ez-lab.xyz"
       http:
         paths:
           - path: /
@@ -62,7 +58,3 @@ spec:
                 port:
                   number: 8080
 
-EOF
-kubectl apply -f sample-app.yaml
-# rm sample-app.yaml
-set +x

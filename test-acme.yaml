@@ -1,0 +1,31 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+  namespace: cert-manager
+spec:
+  acme:
+    email: fjacquet@ljfch.onmicrosoft.com
+    # ACME server URL for Let’s Encrypt’s staging environment.
+    # The staging environment will not issue trusted certificates but is
+    # used to ensure that the verification process is working properly
+    # before moving to production
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+
+    privateKeySecretRef:
+      # Secret resource used to store the account's private key.
+      name: letsencrypt-secret
+    solvers:
+      - dns01:
+          azureDNS:
+            clientID: f099a910-a9ba-4105-baff-6ad7bcb32037
+            clientSecretSecretRef:
+              # The following is the secret we created in Kubernetes. Issuer will use this to present challenge to Azure DNS.
+              name: azuredns-config
+              key: client-secret
+            subscriptionID: 41e76d28-bdcf-4254-bda2-d06420a1f30d
+            tenantID: d292d038-bb78-4bd0-84b3-3cbd322619da
+            resourceGroupName: aksrg
+            hostedZoneName: aks.ez-lab.xyz
+            # Azure Cloud Environment, default to AzurePublicCloud
+            environment: AzurePublicCloud

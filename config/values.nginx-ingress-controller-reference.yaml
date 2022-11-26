@@ -117,7 +117,7 @@ watchIngressWithoutClass: false
 ingressClassResource:
   name: nginx
   enabled: true
-  default: true
+  default: false
   controllerClass: "k8s.io/ingress-nginx"
   parameters: {}
 ## Allows customization of the external service
@@ -221,7 +221,7 @@ daemonset:
     https: 443
 ## @param replicaCount Desired number of Controller pods
 ##
-replicaCount: 2
+replicaCount: 1
 ## @param updateStrategy Strategy to use to update Pods
 ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
 ##
@@ -782,11 +782,7 @@ service:
   ## This can be used to set the LoadBalancer service type to internal only.
   ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
   ##
-  annotations:
-    {}
-    # prometheus.io/port: "10254"
-    # prometheus.io/scrape: "true"
-
+  annotations: {}
   ## @param service.labels Labels for controller service
   ##
   labels: {}
@@ -902,7 +898,7 @@ autoscaling:
 metrics:
   ## @param metrics.enabled Enable exposing Controller statistics
   ##
-  enabled: true
+  enabled: false
   ## Prometheus exporter service parameters
   ##
   service:
@@ -926,7 +922,7 @@ metrics:
   serviceMonitor:
     ## @param metrics.serviceMonitor.enabled Create ServiceMonitor resource for scraping metrics using PrometheusOperator
     ##
-    enabled: true
+    enabled: false
     ## @param metrics.serviceMonitor.namespace Namespace in which Prometheus is running
     ##
     namespace: ""
@@ -978,3 +974,4 @@ metrics:
     additionalLabels: {}
     namespace: ""
     rules: []
+

@@ -28,4 +28,11 @@ az role assignment create \
 az ad sp create-for-rbac \
   --role="Monitoring Reader" \
   --scopes=$SCOPE
+
+IP=$(az network public-ip show --resource-group $AZ_RESOURCE_GROUP --name $AZ_RESOURCE_GROUP-public-ip --query id -o tsv)
+
+az aks update \
+  --resource-group $AZ_RESOURCE_GROUP \
+  --name $AKS_CLUSTER_NAME \
+  --load-balancer-outbound-ips $IP
 set +x

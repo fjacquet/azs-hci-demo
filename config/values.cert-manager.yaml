@@ -1,0 +1,11 @@
+controller:
+  replicaCount: 2
+installCRDs: true
+prometheus:
+  enabled: true
+  servicemonitor:
+    enabled: true
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true

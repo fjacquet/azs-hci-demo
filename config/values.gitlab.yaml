@@ -27,7 +27,8 @@ global:
   common:
     labels: {}
 
-  image: {}
+  image:
+    {}
     # pullPolicy: IfNotPresent
     # pullSecrets: []
 
@@ -69,9 +70,9 @@ global:
     # class:
     annotations: {}
     enabled: true
-    tls:
-      enabled: true
-      secretName: gitlab-secret-name
+    tls: {}
+    #   enabled: true
+    #   secretName:
     path: /
     pathType: Prefix
 
@@ -92,14 +93,16 @@ global:
     ## Enterprise license for this GitLab installation
     ## Secret created according to https://docs.gitlab.com/charts/installation/secrets#initial-enterprise-license
     ## If allowing shared-secrets generation, this is OPTIONAL.
-    license: {}
+    license:
+      {}
       # secret: RELEASE-gitlab-license
       # key: license
 
   ## Initial root password for this GitLab installation
   ## Secret created according to https://docs.gitlab.com/charts/installation/secrets#initial-root-password
   ## If allowing shared-secrets generation, this is OPTIONAL.
-  # initialRootPassword:
+  initialRootPassword:
+    {}
     # secret: RELEASE-gitlab-initial-root-password
     # key: password
 
@@ -112,17 +115,18 @@ global:
     keepalivesCount:
     tcpUserTimeout:
     password:
-      useSecret: true
-      secret:  gitlab-yuba-password
-      key: postgresql-password
-      file:
-    host: yb-tservers.yugabyte.svc.cluster.local
-    port: 5433
-    username: aks
-    database: gitlab
-    applicationName:
-    preparedStatements: false
-    databaseTasks: true
+      {}
+      # useSecret:
+      # secret:
+      # key:
+      # file:
+    # host: postgresql.hostedsomewhere.else
+    # port: 123
+    # username: gitlab
+    # database: gitlabhq_production
+    # applicationName:
+    # preparedStatements: false
+    # databaseTasks: true
 
   ## https://docs.gitlab.com/charts/charts/globals#configure-redis-settings
   redis:
@@ -139,7 +143,8 @@ global:
   ## https://docs.gitlab.com/charts/charts/globals#configure-gitaly-settings
   gitaly:
     enabled: true
-    authToken: {}
+    authToken:
+      {}
       # secret:
       # key:
     # serviceName:
@@ -174,7 +179,7 @@ global:
     # serviceName:
     service:
       name: praefect
-      type: ClusterIP
+      type: LoadBalancer
       externalPort: 8075
       internalPort: 8075
       tls:
@@ -187,12 +192,13 @@ global:
   ## https://docs.gitlab.com/charts/charts/globals#configure-minio-settings
   minio:
     enabled: true
-    credentials: {}
+    credentials:
+      {}
       # secret:
 
   ## https://docs.gitlab.com/charts/charts/globals#configure-grafana-integration
   grafana:
-    enabled: true
+    enabled: false
 
   ## https://docs.gitlab.com/charts/charts/globals#configure-appconfig-settings
   ## Rails based portions of this chart share many settings
@@ -218,64 +224,65 @@ global:
 
     ## https://docs.gitlab.com/charts/charts/globals#cron-jobs-related-settings
     cron_jobs:
-      # Flag stuck CI builds as failed
-      stuck_ci_jobs_worker:
-        cron: "0 * * * *"
-      # Schedule pipelines in the near future
-      pipeline_schedule_worker:
-        cron: "19 * * * *"
-      # Remove expired build artifacts
-      expire_build_artifacts_worker:
-        cron: "*/7 * * * *"
-      # Periodically run 'git fsck' on all repositories.
-      repository_check_worker:
-        cron: "20 * * * *"
-      # Send admin emails once a week
-      admin_email_worker:
-        cron: "0 0 * * 0"
-      # Remove outdated repository archives
-      repository_archive_cache_worker:
-        cron: "0 * * * *"
-      # Verify custom GitLab Pages domains
-      pages_domain_verification_cron_worker:
-        cron: "*/15 * * * *"
-      schedule_migrate_external_diffs_worker:
-        cron: "15 * * * *"
-      # Prune stale group runners on opted-in namespaces
-      ci_runners_stale_group_runners_prune_worker_cron:
-        cron: "30 * * * *"
-      # Periodically update ci_runner_versions table with up-to-date versions and status
-      ci_runner_versions_reconciliation_worker:
-        cron: "@daily"
-      ## GitLab Geo
+      {}
+      ## Flag stuck CI builds as failed
+      # stuck_ci_jobs_worker:
+      #   cron: "0 * * * *"
+      ## Schedule pipelines in the near future
+      # pipeline_schedule_worker:
+      #   cron: "19 * * * *"
+      ## Remove expired build artifacts
+      # expire_build_artifacts_worker:
+      #   cron: "*/7 * * * *"
+      ## Periodically run 'git fsck' on all repositories.
+      # repository_check_worker:
+      #   cron: "20 * * * *"
+      ## Send admin emails once a week
+      # admin_email_worker:
+      #   cron: "0 0 * * 0"
+      ## Remove outdated repository archives
+      # repository_archive_cache_worker:
+      #   cron: "0 * * * *"
+      ## Verify custom GitLab Pages domains
+      # pages_domain_verification_cron_worker:
+      #   cron: "*/15 * * * *"
+      # schedule_migrate_external_diffs_worker:
+      #   cron: "15 * * * *"
+      ## Prune stale group runners on opted-in namespaces
+      # ci_runners_stale_group_runners_prune_worker_cron:
+      #   cron: "30 * * * *"
+      ## Periodically update ci_runner_versions table with up-to-date versions and status
+      # ci_runner_versions_reconciliation_worker:
+      #   cron: "@daily"
+      ### GitLab Geo
       # Geo Primary only!
-      geo_prune_event_log_worker:
-        cron: "*/5 * * * *"
-      # GitLab Geo repository sync worker
-      geo_repository_sync_worker:
-        cron: "*/5 * * * *"
-      # GitLab Geo file download dispatch worker
-      geo_file_download_dispatch_worker:
-       cron: "*/10 * * * *"
-      # GitLab Geo repository verification primary batch worker
-      geo_repository_verification_primary_batch_worker:
-        cron: "*/5 * * * *"
-      # GitLab Geo repository verification secondary scheduler worker
-      geo_repository_verification_secondary_scheduler_worker:
-        cron: "*/5 * * * *"
-      # GitLab Geo migrated local files clean up worker
-      geo_migrated_local_files_clean_up_worker:
-        cron: "15 */6 * * *"
-      ## LDAP
-      ldap_sync_worker:
-        cron: "30 1 * * *"
-      ldap_group_sync_worker:
-        cron: "0 * * * *"
-      ## Snapshot active user statistics
-      historical_data_worker:
-        cron: "0 12 * * *"
-      ## loose_foreign_keys_cleanup_worker_cron:
-        cron: "*/5 * * * *"
+      # geo_prune_event_log_worker:
+      #   cron: "*/5 * * * *"
+      ## GitLab Geo repository sync worker
+      # geo_repository_sync_worker:
+      #   cron: "*/5 * * * *"
+      ## GitLab Geo file download dispatch worker
+      # geo_file_download_dispatch_worker:
+      #  cron: "*/10 * * * *"
+      ## GitLab Geo repository verification primary batch worker
+      # geo_repository_verification_primary_batch_worker:
+      #   cron: "*/5 * * * *"
+      ## GitLab Geo repository verification secondary scheduler worker
+      # geo_repository_verification_secondary_scheduler_worker:
+      #   cron: "*/5 * * * *"
+      ## GitLab Geo migrated local files clean up worker
+      # geo_migrated_local_files_clean_up_worker:
+      #   cron: "15 */6 * * *"
+      ### LDAP
+      # ldap_sync_worker:
+      #   cron: "30 1 * * *"
+      # ldap_group_sync_worker:
+      #   cron: "0 * * * *"
+      ### Snapshot active user statistics
+      # historical_data_worker:
+      #   cron: "0 12 * * *"
+      # loose_foreign_keys_cleanup_worker_cron:
+      #   cron: "*/5 * * * *"
 
     ## https://docs.gitlab.com/charts/charts/globals#content-security-policy
     contentSecurityPolicy:
@@ -302,31 +309,36 @@ global:
     object_store:
       enabled: false
       proxy_download: true
-      storage_options: {}
+      storage_options:
+        {}
         # server_side_encryption:
         # server_side_encryption_kms_key_id
-      connection: {}
+      connection:
+        {}
         # secret:
         # key:
     lfs:
       enabled: true
       proxy_download: true
       bucket: git-lfs
-      connection: {}
+      connection:
+        {}
         # secret:
         # key:
     artifacts:
       enabled: true
       proxy_download: true
       bucket: gitlab-artifacts
-      connection: {}
+      connection:
+        {}
         # secret:
         # key:
     uploads:
       enabled: true
       proxy_download: true
       bucket: gitlab-uploads
-      connection: {}
+      connection:
+        {}
         # secret:
         # key:
     packages:
@@ -358,20 +370,6 @@ global:
       bucket: gitlab-backups
       tmpBucket: tmp
 
-    ## https://docs.gitlab.com/charts/charts/globals#outgoing-email
-    ## Microsoft Graph Mailer settings
-    microsoft_graph_mailer:
-      enabled: false
-      user_id: ""
-      tenant: ""
-      client_id: ""
-      client_secret: ""
-      client_secret:
-        secret: ""
-        key: secret
-      azure_ad_endpoint: "https://login.microsoftonline.com"
-      graph_endpoint: "https://graph.microsoft.com"
-
     ## https://docs.gitlab.com/charts/installation/command-line-options.html#incoming-email-configuration
     ## https://docs.gitlab.com/charts/charts/gitlab/mailroom/index.html#incoming-email
     incomingEmail:
@@ -395,7 +393,8 @@ global:
         key: secret
       pollInterval: 60
       deliveryMethod: webhook
-      authToken: {}
+      authToken:
+        {}
         # secret:
         # key:
 
@@ -421,7 +420,8 @@ global:
         key: secret
       pollInterval: 60
       deliveryMethod: webhook
-      authToken: {}
+      authToken:
+        {}
         # secret:
         # key:
 
@@ -433,7 +433,8 @@ global:
       ## See documentation for complete example of a configured LDAP server
 
     ## https://docs.gitlab.com/charts/charts/globals#kas-settings
-    gitlab_kas: {}
+    gitlab_kas:
+      {}
       # secret:
       # key:
       # enabled:
@@ -493,12 +494,14 @@ global:
       routingRules: []
 
     # Config that only applies to the defaults on initial install
-    initialDefaults: {}
+    initialDefaults:
+      {}
       # signupEnabled:
   ## End of global.appConfig
 
   oauth:
-    gitlab-pages: {}
+    gitlab-pages:
+      {}
       # secret:
       # appIdKey:
       # appSecretKey:
@@ -541,14 +544,15 @@ global:
 
   ## https://docs.gitlab.com/charts/charts/gitlab/spamcheck/
   spamcheck:
-    enabled: true
+    enabled: false
 
   ## https://docs.gitlab.com/charts/charts/globals#configure-gitlab-shell
   shell:
     authToken: {}
     # secret:
     # key:
-    hostKeys: {}
+    hostKeys:
+      {}
       # secret:
     ## https://docs.gitlab.com/charts/charts/globals#tcp-proxy-protocol
     tcp:
@@ -557,7 +561,8 @@ global:
   ## Rails application secrets
   ## Secret created according to https://docs.gitlab.com/charts/installation/secrets#gitlab-rails-secret
   ## If allowing shared-secrets generation, this is OPTIONAL.
-  railsSecrets: {}
+  railsSecrets:
+    {}
     # secret:
 
   ## Rails generic setting, applicable to all Rails-based containers
@@ -568,12 +573,15 @@ global:
   ## https://docs.gitlab.com/charts/charts/globals#configure-registry-settings
   registry:
     bucket: registry
-    certificate: {}
+    certificate:
+      {}
       # secret:
-    httpSecret: {}
+    httpSecret:
+      {}
       # secret:
       # key:
-    notificationSecret: {}
+    notificationSecret:
+      {}
       # secret:
       # key:
     tls:
@@ -583,7 +591,8 @@ global:
       cache:
         password: {}
     # https://docs.docker.com/registry/notifications/#configuration
-    notifications: {}
+    notifications:
+      {}
       # endpoints:
       #   - name: FooListener
       #     url: https://foolistener.com/event
@@ -600,7 +609,7 @@ global:
       # events: {}
 
   pages:
-    enabled: true
+    enabled: false
     accessControl: false
     path:
     host:
@@ -616,13 +625,16 @@ global:
       enabled: true
       bucket: gitlab-pages
       # proxy_download: true
-      connection: {}
+      connection:
+        {}
         # secret:
         # key:
-    apiSecret: {}
+    apiSecret:
+      {}
       # secret:
       # key:
-    authSecret: {}
+    authSecret:
+      {}
       # secret:
       # key:
 
@@ -630,7 +642,8 @@ global:
   ## Secret created according to https://docs.gitlab.com/charts/installation/secrets#gitlab-runner-secret
   ## If allowing shared-secrets generation, this is OPTIONAL.
   runner:
-    registrationToken: {}
+    registrationToken:
+      {}
       # secret:
 
   ## https://docs.gitlab.com/charts/charts/globals#outgoing-email
@@ -788,7 +801,8 @@ global:
 
 upgradeCheck:
   enabled: true
-  image: {}
+  image:
+    {}
     # repository:
     # tag:
     # pullPolicy: IfNotPresent
@@ -810,17 +824,15 @@ upgradeCheck:
 #   # Required if using Let's Encrypt.
 #   email: email@example.com
 certmanager-issuer:
-  # The email address to register certificates requested from Let's Encrypt.
-  # Required if using Let's Encrypt.
   email: fjacquet@ljfch.onmicrosoft.com
 ## Installation & configuration of jetstack/cert-manager
 ## See requirements.yaml for current version
 certmanager:
-  installCRDs: true
+  installCRDs: false
   nameOverride: certmanager
   # Install cert-manager chart. Set to false if you already have cert-manager
   # installed or if you are not using cert-manager.
-  install: false
+  install: true
   # Other cert-manager configurations from upstream
   # See https://github.com/jetstack/cert-manager/blob/master/deploy/charts/cert-manager/README#configuration
   rbac:
@@ -836,7 +848,7 @@ nginx-ingress:
     addHeaders:
       Referrer-Policy: strict-origin-when-cross-origin
     config:
-      annotation-value-word-blocklist: "load_module,lua_package,_by_lua,location,root,proxy_pass,serviceaccount,{,},',\""
+      annotation-value-word-blocklist: 'load_module,lua_package,_by_lua,location,root,proxy_pass,serviceaccount,{,},'',"'
       hsts: "true"
       hsts-include-subdomains: "false"
       hsts-max-age: "63072000"
@@ -1048,7 +1060,7 @@ postgresql:
   postgresqlUsername: gitlab
   # This just needs to be set. It will use a second entry in existingSecret for postgresql-postgres-password
   postgresqlPostgresPassword: bogus
-  install: false
+  install: true
   postgresqlDatabase: gitlabhq_production
   image:
     tag: 12.7.0

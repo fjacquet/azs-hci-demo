@@ -3,8 +3,8 @@
 ## Description
 
 NAME: external-dns
-LAST DEPLOYED: Mon Nov 21 18:45:09 2022
-NAMESPACE: externaldns
+LAST DEPLOYED: Sat Nov 26 09:50:41 2022
+NAMESPACE: external-dns
 STATUS: deployed
 REVISION: 1
 TEST SUITE: None
@@ -18,6 +18,6 @@ APP VERSION: 0.13.1
 To verify that external-dns has started, run:
 
 ```bash
-kubectl --namespace=external-dns get pods -l "app.kubernetes.io/name=external-dns,app.kubernetes.io/instance=external-dns"
+  kubectl --namespace=external-dns get pods -l "app.kubernetes.io/name=external-dns,app.kubernetes.io/instance=external-dns"
 
 ```

@@ -1,0 +1,20 @@
+prometheus:
+  ingress:
+    enabled: true
+    ingressClassName: "nginx"
+  service:
+    type: LoadBalancer
+    externalTrafficPolicy: Cluster
+    ports:
+      http: 9090
+  persistence:
+    enabled: true
+kubeEtcd:
+  enabled: false
+kubeControllerManager:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubelet:
+  serviceMonitor:
+    https: false

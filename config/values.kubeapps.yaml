@@ -1,0 +1,22 @@
+ingress:
+  enabled: true
+  hostname: apps.aks.ez-lab.xyz
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-staging
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  tls: true
+postgresql:
+  enabled: true
+  auth:
+    postgresPassword: "LhideGU6vKHwCkrv89LG"
+    database: assets
+  ## PostgreSQL Primary persistence configuration
+  ## @param postgresql.primary.persistence.enabled Enable PostgreSQL Primary data persistence using PVC
+  primary:
+    persistence:
+      enabled: true
+frontend:
+  service:
+    type: LoadBalancer

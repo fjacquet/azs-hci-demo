@@ -1,8 +1,7 @@
 controller:
-  adminSecret: true
-  adminUser: admin
+  adminUser: "admin"
   adminPassword: "@wesome!1"
-  numExecutors: 0
+  serviceType: LoadBalancer
   installPlugins:
     - configuration-as-code:latest
     - kubernetes:latest
@@ -26,27 +25,6 @@ controller:
     - docker-workflow:latest
     - command-launcher:latest
     - github-branch-source:latest
-  overwritePlugins: true
-  ingress:
-    enabled: true
-    hostName: jenkins.aks.ez-lab.xyz
-    tls:
-      - secretName: devops-cert-jenkins
-        hosts:
-          - jenkins-devops.aks.ez-lab.xyz
-    annotations:
-      kubernetes.io/ingress.class: nginx
-      #kubernetes.io/ssl-redirect: "true"
-persistence:
-  enabled: true
-  storageClass: ""
-  annotations: {}
-  accessMode: "ReadWriteOnce"
-  size: "10Gi"
-  volumes:
-  #  - name: nothing
-  #    emptyDir: {}
-  mounts:
-  #  - mountPath: /var/nothing
-  #    name: nothing
-  #    readOnly: true
+
+  # Set to false to download the minimum required version of all dependencies.
+  installLatestPlugins: true

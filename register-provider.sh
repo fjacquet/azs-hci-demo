@@ -9,7 +9,7 @@ az config set extension.use_dynamic_install=yes_without_prompt
 # az feature unregister --name EnablePodIdentityPreview --namespace Microsoft.ContainerService
 # az feature unregister --name AutoUpgradePreview --namespace Microsoft.ContainerService
 
-# az extension add --name aks-preview
+az extension add --name aks-preview
 # az extension update --name aks-preview
 
 az provider register --namespace Microsoft.Network --wait

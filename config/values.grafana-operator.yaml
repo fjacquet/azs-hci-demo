@@ -1,0 +1,27 @@
+grafana:
+  enabled: true
+  service:
+    type: LoadBalancer
+    path: /
+    pathType: Prefix
+  ingress:
+    enable: true
+    ingressClassName: "nginx"
+    tls: true
+config:
+  log:
+    mode: "console"
+    level: "warn"
+  security:
+    admin_user: "root"
+    admin_password: "secret"
+  auth:
+    disable_login_form: False
+    disable_signout_menu: True
+  auth.anonymous:
+    enabled: True
+  persistence:
+    enable: true
+
+plugins:
+  - name: grafana-piechart-panel

@@ -7,9 +7,8 @@ set -x
 az aks create \
   --resource-group $AZ_RESOURCE_GROUP \
   --name $AKS_CLUSTER_NAME \
-  --node-count $AKS_COUNT \
+  --node-count 1 \
   --node-vm-size $AKS_SIZE \
-  --enable-addons monitoring \
   --load-balancer-sku standard \
   --vm-set-type VirtualMachineScaleSets \
   --generate-ssh-keys

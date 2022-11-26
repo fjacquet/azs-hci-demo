@@ -480,7 +480,7 @@ controller:
     tls:
       - secretName: devops-cert-jenkins
         hosts:
-          - jenkins-devops.aks.ez-lab.xyz
+          - jenkins.aks.ez-lab.xyz
 
   # often you want to have your controller all locked down and private
   # but you still want to get webhooks from your SCM

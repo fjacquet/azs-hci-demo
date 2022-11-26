@@ -48,7 +48,7 @@ global:
     allowClusterRoles: true
   ## https://docs.gitlab.com/charts/charts/globals#configure-host-settings
   hosts:
-    domain: aks.ez-lab.xyz
+    domain: example.com
     hostSuffix:
     https: true
     externalIP:
@@ -69,9 +69,9 @@ global:
     # class:
     annotations: {}
     enabled: true
-    tls:
-      enabled: true
-      secretName: gitlab-secret-name
+    tls: {}
+    #   enabled: true
+    #   secretName:
     path: /
     pathType: Prefix
 
@@ -99,7 +99,7 @@ global:
   ## Initial root password for this GitLab installation
   ## Secret created according to https://docs.gitlab.com/charts/installation/secrets#initial-root-password
   ## If allowing shared-secrets generation, this is OPTIONAL.
-  # initialRootPassword:
+  initialRootPassword: {}
     # secret: RELEASE-gitlab-initial-root-password
     # key: password
 
@@ -111,18 +111,18 @@ global:
     keepalivesInterval:
     keepalivesCount:
     tcpUserTimeout:
-    password:
-      useSecret: true
-      secret:  gitlab-yuba-password
-      key: postgresql-password
-      file:
-    host: yb-tservers.yugabyte.svc.cluster.local
-    port: 5433
-    username: aks
-    database: gitlab
-    applicationName:
-    preparedStatements: false
-    databaseTasks: true
+    password: {}
+      # useSecret:
+      # secret:
+      # key:
+      # file:
+    # host: postgresql.hostedsomewhere.else
+    # port: 123
+    # username: gitlab
+    # database: gitlabhq_production
+    # applicationName:
+    # preparedStatements: false
+    # databaseTasks: true
 
   ## https://docs.gitlab.com/charts/charts/globals#configure-redis-settings
   redis:
@@ -192,7 +192,7 @@ global:
 
   ## https://docs.gitlab.com/charts/charts/globals#configure-grafana-integration
   grafana:
-    enabled: true
+    enabled: false
 
   ## https://docs.gitlab.com/charts/charts/globals#configure-appconfig-settings
   ## Rails based portions of this chart share many settings
@@ -217,65 +217,65 @@ global:
     maxRequestDurationSeconds:
 
     ## https://docs.gitlab.com/charts/charts/globals#cron-jobs-related-settings
-    cron_jobs:
-      # Flag stuck CI builds as failed
-      stuck_ci_jobs_worker:
-        cron: "0 * * * *"
-      # Schedule pipelines in the near future
-      pipeline_schedule_worker:
-        cron: "19 * * * *"
-      # Remove expired build artifacts
-      expire_build_artifacts_worker:
-        cron: "*/7 * * * *"
-      # Periodically run 'git fsck' on all repositories.
-      repository_check_worker:
-        cron: "20 * * * *"
-      # Send admin emails once a week
-      admin_email_worker:
-        cron: "0 0 * * 0"
-      # Remove outdated repository archives
-      repository_archive_cache_worker:
-        cron: "0 * * * *"
-      # Verify custom GitLab Pages domains
-      pages_domain_verification_cron_worker:
-        cron: "*/15 * * * *"
-      schedule_migrate_external_diffs_worker:
-        cron: "15 * * * *"
-      # Prune stale group runners on opted-in namespaces
-      ci_runners_stale_group_runners_prune_worker_cron:
-        cron: "30 * * * *"
-      # Periodically update ci_runner_versions table with up-to-date versions and status
-      ci_runner_versions_reconciliation_worker:
-        cron: "@daily"
-      ## GitLab Geo
+    cron_jobs: {}
+      ## Flag stuck CI builds as failed
+      # stuck_ci_jobs_worker:
+      #   cron: "0 * * * *"
+      ## Schedule pipelines in the near future
+      # pipeline_schedule_worker:
+      #   cron: "19 * * * *"
+      ## Remove expired build artifacts
+      # expire_build_artifacts_worker:
+      #   cron: "*/7 * * * *"
+      ## Periodically run 'git fsck' on all repositories.
+      # repository_check_worker:
+      #   cron: "20 * * * *"
+      ## Send admin emails once a week
+      # admin_email_worker:
+      #   cron: "0 0 * * 0"
+      ## Remove outdated repository archives
+      # repository_archive_cache_worker:
+      #   cron: "0 * * * *"
+      ## Verify custom GitLab Pages domains
+      # pages_domain_verification_cron_worker:
+      #   cron: "*/15 * * * *"
+      # schedule_migrate_external_diffs_worker:
+      #   cron: "15 * * * *"
+      ## Prune stale group runners on opted-in namespaces
+      # ci_runners_stale_group_runners_prune_worker_cron:
+      #   cron: "30 * * * *"
+      ## Periodically update ci_runner_versions table with up-to-date versions and status
+      # ci_runner_versions_reconciliation_worker:
+      #   cron: "@daily"
+      ### GitLab Geo
       # Geo Primary only!
-      geo_prune_event_log_worker:
-        cron: "*/5 * * * *"
-      # GitLab Geo repository sync worker
-      geo_repository_sync_worker:
-        cron: "*/5 * * * *"
-      # GitLab Geo file download dispatch worker
-      geo_file_download_dispatch_worker:
-       cron: "*/10 * * * *"
-      # GitLab Geo repository verification primary batch worker
-      geo_repository_verification_primary_batch_worker:
-        cron: "*/5 * * * *"
-      # GitLab Geo repository verification secondary scheduler worker
-      geo_repository_verification_secondary_scheduler_worker:
-        cron: "*/5 * * * *"
-      # GitLab Geo migrated local files clean up worker
-      geo_migrated_local_files_clean_up_worker:
-        cron: "15 */6 * * *"
-      ## LDAP
-      ldap_sync_worker:
-        cron: "30 1 * * *"
-      ldap_group_sync_worker:
-        cron: "0 * * * *"
-      ## Snapshot active user statistics
-      historical_data_worker:
-        cron: "0 12 * * *"
-      ## loose_foreign_keys_cleanup_worker_cron:
-        cron: "*/5 * * * *"
+      # geo_prune_event_log_worker:
+      #   cron: "*/5 * * * *"
+      ## GitLab Geo repository sync worker
+      # geo_repository_sync_worker:
+      #   cron: "*/5 * * * *"
+      ## GitLab Geo file download dispatch worker
+      # geo_file_download_dispatch_worker:
+      #  cron: "*/10 * * * *"
+      ## GitLab Geo repository verification primary batch worker
+      # geo_repository_verification_primary_batch_worker:
+      #   cron: "*/5 * * * *"
+      ## GitLab Geo repository verification secondary scheduler worker
+      # geo_repository_verification_secondary_scheduler_worker:
+      #   cron: "*/5 * * * *"
+      ## GitLab Geo migrated local files clean up worker
+      # geo_migrated_local_files_clean_up_worker:
+      #   cron: "15 */6 * * *"
+      ### LDAP
+      # ldap_sync_worker:
+      #   cron: "30 1 * * *"
+      # ldap_group_sync_worker:
+      #   cron: "0 * * * *"
+      ### Snapshot active user statistics
+      # historical_data_worker:
+      #   cron: "0 12 * * *"
+      # loose_foreign_keys_cleanup_worker_cron:
+      #   cron: "*/5 * * * *"
 
     ## https://docs.gitlab.com/charts/charts/globals#content-security-policy
     contentSecurityPolicy:
@@ -541,7 +541,7 @@ global:
 
   ## https://docs.gitlab.com/charts/charts/gitlab/spamcheck/
   spamcheck:
-    enabled: true
+    enabled: false
 
   ## https://docs.gitlab.com/charts/charts/globals#configure-gitlab-shell
   shell:
@@ -600,7 +600,7 @@ global:
       # events: {}
 
   pages:
-    enabled: true
+    enabled: false
     accessControl: false
     path:
     host:
@@ -809,10 +809,7 @@ upgradeCheck:
 #   # The email address to register certificates requested from Let's Encrypt.
 #   # Required if using Let's Encrypt.
 #   email: email@example.com
-certmanager-issuer:
-  # The email address to register certificates requested from Let's Encrypt.
-  # Required if using Let's Encrypt.
-  email: fjacquet@ljfch.onmicrosoft.com
+
 ## Installation & configuration of jetstack/cert-manager
 ## See requirements.yaml for current version
 certmanager:
@@ -820,7 +817,7 @@ certmanager:
   nameOverride: certmanager
   # Install cert-manager chart. Set to false if you already have cert-manager
   # installed or if you are not using cert-manager.
-  install: false
+  install: true
   # Other cert-manager configurations from upstream
   # See https://github.com/jetstack/cert-manager/blob/master/deploy/charts/cert-manager/README#configuration
   rbac:
@@ -1048,7 +1045,7 @@ postgresql:
   postgresqlUsername: gitlab
   # This just needs to be set. It will use a second entry in existingSecret for postgresql-postgres-password
   postgresqlPostgresPassword: bogus
-  install: false
+  install: true
   postgresqlDatabase: gitlabhq_production
   image:
     tag: 12.7.0
@@ -1219,3 +1216,4 @@ gitlab:
   #   kas:
   ## https://docs.gitlab.com/charts/charts/gitlab/praefect
   #   praefect:
+
