@@ -1,0 +1,23 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: aks.ez-lab.xyz
+  namespace: default
+spec:
+  secretName: whoami.aks.ez-lab.xyz-tls
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+  commonName: whoami.aks.ez-lab.xyz
+  dnsNames:
+    - apps.aks.ez-lab.xyz
+    - gitlab.aks.ez-lab.xyz
+    - grafana.aks.ez-lab.xyz
+    - jenkins.aks.ez-lab.xyz
+    - keycloak.aks.ez-lab.xyz
+    - minio.aks.ez-lab.xyz
+    - prometheus.aks.ez-lab.xyz
+    - redis.aks.ez-lab.xyz
+    - sonarqube.aks.ez-lab.xyz
+    - wiki.aks.ez-lab.xyz

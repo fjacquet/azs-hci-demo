@@ -1,11 +1,14 @@
-controller:
-  replicaCount: 2
+global:
+  logLevel: 2
 installCRDs: true
-prometheus:
-  enabled: true
-  servicemonitor:
-    enabled: true
-metrics:
-  enabled: true
-  serviceMonitor:
-    enabled: true
+replicaCount: 1
+# strategy:
+#   type: RollingUpdate
+# prometheus:
+#   enabled: true
+#   servicemonitor:
+#     enabled: true
+# metrics:
+#   enabled: true
+#   serviceMonitor:
+#     enabled: true

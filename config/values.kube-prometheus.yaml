@@ -1,10 +1,14 @@
 prometheus:
+  enabled: true
   ingress:
     enabled: true
-    ingressClassName: "nginx"
+    ingressClassName: "traefik"
+    tls: true
   service:
     type: LoadBalancer
     externalTrafficPolicy: Cluster
+    path: /
+    pathType: Prefix
     ports:
       http: 9090
   persistence:

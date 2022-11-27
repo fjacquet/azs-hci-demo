@@ -6,16 +6,7 @@ set -x
 #-----------------------------------------------------------------------------
 kubectl create namespace $NAMESPACE_KUBEAPPS
 
-cat <<EOF >secret-kubeapps.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: kubeapps-operator-token
-  namespace: $NAMESPACE_KUBEAPPS
-  annotations:
-    kubernetes.io/service-account.name: kubeapps-operator
-type: kubernetes.io/service-account-token
-EOF
+. ./generate-secret-kubeapps.sh
 kubectl apply -f secret-kubeapps.yaml
 rm secret-kubeapps.yml
 
@@ -25,9 +16,8 @@ rm secret-kubeapps.yml
 
 helm upgrade --install kubeapps bitnami/kubeapps \
   -n $NAMESPACE_KUBEAPPS \
-  -f config/values.kubeapps.yaml \
-  --set ingress.hostname=apps.$AZ_DNS_DOMAIN \
-  --create-namespace
+  --create-namespace \
+  -f config/values.kubeapps.yaml
 # --wait \
 # --timeout=15m # \
 
@@ -36,11 +26,13 @@ kubectl create -n $NAMESPACE_KUBEAPPS \
   kubeapps-operator
 
 kubectl create clusterrolebinding kubeapps-operator \
-  --clusterrole=cluster-admin \
-  --serviceaccount=default:kubeapps-operator
+  --clusterrole=cluster-admin -n $NAMESPACE_KUBEAPPS --serviceaccount=kubeapps:kubeapps-operator
 
-kubectl get -n $NAMESPACE_KUBEAPPS secret kubeapps-operator-token \
-  -o go-template='{{.data.token | base64decode}}'
+kubectl get secret $(kubectl get serviceaccount -n $NAMESPACE_KUBEAPPS kubeapps-operator \
+  -o jsonpath='{range .secrets[*]}{.name}{"\n"}{end}' |
+  grep kubeapps-operator-token) -n $NAMESPACE_KUBEAPPS \
+  -o jsonpath='{.data.token}' \
+  -o go-template='{{.data.token  | base64decode}}' && echo
 
 # kubectl port-forward -n $NAMESPACE_KUBEAPPS svc/kubeapps 8080:80 &
 set +x

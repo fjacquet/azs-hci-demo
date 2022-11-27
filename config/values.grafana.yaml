@@ -1,0 +1,62 @@
+service:
+  type: LoadBalancer
+ingress:
+  enabled: true
+  ingressClassName: traefik
+  path: /
+  pathType: Prefix
+  hosts:
+    - grafana.aks.ez-lab.xyz
+  tls:
+    - secretName: grafana-tls
+      hosts:
+        - grafana.aks.ez-lab.xyz
+# plugins:
+#   - name: grafana-piechart-panel
+persistence:
+  type: pvc
+  enabled: true
+  accessModes:
+    - ReadWriteOnce
+  size: 10Gi
+config:
+  log:
+    mode: "console"
+    level: "warn"
+  security:
+    admin_user: "root"
+    admin_password: "secret"
+admin_user: "root"
+admin_password: "secret"
+grafana.ini:
+  server:
+    domain: grafana.aks.ez-lab.xyz
+    root_url: "%(protocol)s://%(domain)s/grafana"
+    serve_from_sub_path: true
+dashboards:
+  default:
+    # prometheus-stats:
+    #   # Ref: https://grafana.com/dashboards/2
+    #   gnetId: 2
+    #   revision: 2
+    #   datasource: Prometheus
+    # node-exporter:
+    #   gnetId: 1860
+    #   revision: 29
+    #   datasource: Prometheus
+    # nginx-export:
+    #   gnetId: 9614
+    #   revision: 1
+    #   datasource: Prometheus
+    # cluster-export:
+    #   gnetId: 10000
+    #   revision: 1
+    #   datasource: Prometheus
+    # keycloak-export:
+    #   gnetId: 10441
+    #   revision: 2
+    #   datasource: Prometheus
+    # external-export:
+    #   gnetId: 15038
+    #   revision: 1
+    #   datasource: Prometheus

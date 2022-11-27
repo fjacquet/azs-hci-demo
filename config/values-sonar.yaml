@@ -64,7 +64,7 @@ ingress:
   extraRules: []
   extraTls: []
   hostname: sonarqube.aks.ez-lab.xyz
-  ingressClassName: nginx
+  ingressClassName: traefik
   path: /
   pathType: ImplementationSpecific
   secrets: []

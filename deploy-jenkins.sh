@@ -8,20 +8,7 @@ set -x
 helm upgrade --install jenkins bitnami/jenkins \
   --create-namespace \
   -n $NAMESPACE_JENKINS \
-  -f config/values.jenkins.yaml
+  -f config/values.jenkins.yaml --wait
 
-# helm upgrade --install \
-#   -f config/values-jenkins.yaml \
-#   myjenkins jenkins/jenkins \
-#   --create-namespace \
-#   -n $NAMESPACE_JENKINS \
-#   --wait \
-#   --timeout=15m
-
-# kubectl exec --namespace $NAMESPACE_JENKINS \
-#   -it svc/myjenkins \
-#   -c jenkins \
-#   -- /bin/cat /run/secrets/additional/chart-admin-password
-
-# kubectl --namespace $NAMESPACE_JENKINS port-forward svc/myjenkins 8080:8080
+# kubectl get secret --namespace jenkins jenkins -o jsonpath="{.data.jenkins-password}" | base64 -d
 set +x

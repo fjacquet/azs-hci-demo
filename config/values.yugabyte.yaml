@@ -28,9 +28,3 @@ serviceMonitor:
   ## https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#servicemonitor
   ##
   enabled: true
-
-authCredentials:
-  ysql:
-    user: "aks"
-    password: "aks"
-    database: "yugabyte"

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 ACME_ISSUER_EMAIL=fjacquet@ljfch.onmicrosoft.com
-AKS_CLUSTER_NAME=aks-cluster
+AKS_CLUSTER_NAME=aks-demo
 AKS_COUNT=4
 AKS_SIZE=Standard_D4ds_v5
 AZ_DNS_DOMAIN=aks.ez-lab.xyz
@@ -22,6 +22,7 @@ NAMESPACE_KUBEADDONS=kube-addons
 NAMESPACE_MONITORING=monitoring
 NAMESPACE_REDIS=redis
 NAMESPACE_SONAR=sonarqube
+NAMESPACE_TRAEFIK=traefik
 NAMESPACE_WIKIJS=wikijs
 NAMESPACE_YUGA=yugabyte
 REGION=switzerlandnorth
@@ -44,6 +45,7 @@ export NAMESPACE_KUBEADDONS
 export NAMESPACE_MONITORING
 export NAMESPACE_REDIS
 export NAMESPACE_SONAR
+export NAMESPACE_TRAEFIK
 export NAMESPACE_WIKIJS
 export NAMESPACE_YUGA
 export REGION AKS_SIZE

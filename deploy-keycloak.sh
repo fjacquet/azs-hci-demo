@@ -7,12 +7,8 @@ set -x
 
 helm upgrade --install keycloak bitnami/keycloak \
   -n $NAMESPACE_KEYCLOAK \
-  --set auth.adminPassword=delltech \
-  --set ingress.enabled=true \
-  --set ingress.ingressClassName=nginx \
-  --set ingress.hostname=keycloak.$AZ_DNS_DOMAIN \
+  -f config/values.keycloak.yaml \
   --create-namespace --wait \
-  --timeout=15m # -f config/values-keycloak.yaml \
-# \
+  --timeout=15m
 
 set +x

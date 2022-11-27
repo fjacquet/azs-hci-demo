@@ -1,6 +1,26 @@
 controller:
   replicaCount: 2
+  service:
+    externalTrafficPolicy: Local
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
+  nodeSelector:
+    kubernetes.io/os: linux
+  admissionWebhooks:
+    patch:
+      nodeSelector:
+        kubernetes.io/os: linux
+  defaultBackend:
+    nodeSelector:
+      kubernetes.io/os: linux
 autoscaling:
   enabled: true
   minReplicas: 1
   maxReplicas: 3
+publishService:
+  enabled: true
+ingressClassResource:
+  name: nginx
+  enabled: true
+  default: false
+  controllerClass: "k8s.io/ingress-nginx"

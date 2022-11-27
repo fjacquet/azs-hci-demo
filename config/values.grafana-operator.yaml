@@ -4,9 +4,11 @@ grafana:
     type: LoadBalancer
     path: /
     pathType: Prefix
+    ports:
+      http: 3000
   ingress:
     enable: true
-    ingressClassName: "nginx"
+    ingressClassName: "traefik"
     tls: true
 config:
   log:

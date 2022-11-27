@@ -14,7 +14,6 @@ ingress:
       paths:
         - path: "/"
           pathType: Prefix
-
   tls:
     - secretName: wiki-example-tls
       hosts:

@@ -1,0 +1,13 @@
+auth:
+  ## @param auth.adminUser Keycloak administrator user
+  ##
+  adminUser: user
+  adminPassword: "delltech"
+# tls:
+#   enabled: true
+ingress:
+  enabled: true
+  hostname: keycloak.aks.ez-lab.xyz
+  ingressClassName: "nginx"
+  path: /
+  servicePort: http

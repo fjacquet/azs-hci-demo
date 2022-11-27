@@ -8,16 +8,18 @@
 . ./create-dns.sh
 # . ./create-pip.sh
 
-# . ./deploy-nginx.sh
+. ./deploy-extdns.sh
+. ./deploy-ingress.sh
 . ./deploy-monitoring.sh
 . ./deploy-certmgr.sh
 . ./deploy-hello.sh
+. ./deploy-whoami.sh
 . ./deploy-db.sh
 # . ./deploy-redis.sh
 
 . ./deploy-wikijs.sh
 . ./deploy-kubeapps.sh
-. ./deploy-gitlab.sh
 . ./deploy-sonarqube.sh
 . ./deploy-jenkins.sh
 . ./deploy-keycloak.sh
+. ./deploy-gitlab.sh

@@ -39,13 +39,12 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: hello-rule
-  namespace: nginx-ingress
   annotations:
-    # kubernetes.io/ingress.class: ngin
-    cert-manager.io/cluster-issuer: letsencrypt-staging
-    cert-manager.io/acme-challenge-type: dns01
+    # nginx.ingress.kubernetes.io/rewrite-target: /$2
+    # nginx.ingress.kubernetes.io/use-regex: "true"
+    cert-manager.io/cluster-issuer: letsencrypt
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
   tls:
   - hosts:
       - hello.$AZ_DNS_DOMAIN

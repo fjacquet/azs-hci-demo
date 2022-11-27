@@ -1,6 +1,6 @@
 controller:
-  adminUser: "admin"
-  adminPassword: "@wesome!1"
+  jenkinsUser: "user"
+  jenkinsPassword: "delltech"
   serviceType: LoadBalancer
   installPlugins:
     - configuration-as-code:latest
@@ -25,6 +25,11 @@ controller:
     - docker-workflow:latest
     - command-launcher:latest
     - github-branch-source:latest
-
   # Set to false to download the minimum required version of all dependencies.
   installLatestPlugins: true
+ingress:
+  enabled: true
+  hostname: jenkins.aks.ez-lab.xyz
+  ingressClassName: "nginx"
+  path: /
+  servicePort: http
