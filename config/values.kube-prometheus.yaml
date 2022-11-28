@@ -2,8 +2,11 @@ prometheus:
   enabled: true
   ingress:
     enabled: true
-    ingressClassName: "traefik"
-    tls: true
+    ingressClassName: "nginx"
+    hostname: prometheus.aks.ez-lab.xyz
+    path: /
+    servicePort: http
+    tls: false
   service:
     type: LoadBalancer
     externalTrafficPolicy: Cluster

@@ -2,9 +2,10 @@ service:
   type: LoadBalancer
 ingress:
   enabled: true
-  ingressClassName: traefik
+  ingressClassName: nginx
   path: /
   pathType: Prefix
+  servicePort: http
   hosts:
     - grafana.aks.ez-lab.xyz
   tls:
