@@ -1,0 +1,14 @@
+global:
+  logLevel: 2
+installCRDs: true
+replicaCount: 1
+# strategy:
+#   type: RollingUpdate
+# prometheus:
+#   enabled: true
+#   servicemonitor:
+#     enabled: true
+# metrics:
+#   enabled: true
+#   serviceMonitor:
+#     enabled: true

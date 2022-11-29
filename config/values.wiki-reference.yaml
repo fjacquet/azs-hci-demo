@@ -42,12 +42,10 @@ startupProbe:
     path: /healthz
     port: http
 
-podSecurityContext:
-  {}
+podSecurityContext: {}
   # fsGroup: 2000
 
-securityContext:
-  {}
+securityContext: {}
   # capabilities:
   #   drop:
   #   - ALL
@@ -56,7 +54,7 @@ securityContext:
   # runAsUser: 1000
 
 service:
-  type: LoadBalancer
+  type: ClusterIP
   port: 80
   # Annotations applied for services such as externalDNS or
   # service type LoadBalancer
@@ -68,11 +66,11 @@ service:
 ingress:
   enabled: true
   className: ""
-  annotations:
-    kubernetes.io/ingress.class: nginx
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: wiki.aks.ez-lab.xyz
+    - host: wiki.minikube.local
       paths:
         - path: "/"
           pathType: Prefix
@@ -82,8 +80,7 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources:
-  {}
+resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -122,11 +119,7 @@ sideload:
 #   databaseURL: postgresql://postgres:postgres@postgres:5432/wiki?ssl=true
 #   # For self signed CAs, like DigitalOcean
 #   NODE_TLS_REJECT_UNAUTHORIZED: "0"
-externalPostgresql:
-  # note: ?sslmode=require => ?ssl=true
-  databaseURL: postgresql://aks:aks@yb-tserver-service.yugabyte.svc.cluster.local:5433/wikijs?sslmode=disable
-  # For self signed CAs, like DigitalOcean
-  NODE_TLS_REJECT_UNAUTHORIZED: "0"
+
 ## Configuration values for the postgresql dependency.
 ## ref: https://github.com/kubernetes/charts/blob/master/stable/postgresql/README.md
 ##
@@ -134,7 +127,7 @@ postgresql:
   ## Use the PostgreSQL chart dependency.
   ## Set to false if bringing your own PostgreSQL, and set secret value postgresql-uri.
   ##
-  enabled: false
+  enabled: true
   ## ssl enforce SSL communication with PostgresSQL
   ## Default to false
   ##
@@ -186,3 +179,4 @@ postgresql:
     ## Persistent Volume Storage Size.
     ##
     size: 8Gi
+

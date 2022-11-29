@@ -40,8 +40,15 @@ kind: Ingress
 metadata:
   name: hello-rule
   annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
     kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
 spec:
+  tls:
+  - hosts:
+      - hello.$AZ_DNS_DOMAIN
+    secretName: hello-secret-tls
   rules:
     - host: "hello.$AZ_DNS_DOMAIN"
       http:
@@ -53,7 +60,8 @@ spec:
                 name: web
                 port:
                   number: 8080
+
 EOF
 kubectl apply -f sample-app.yaml
-rm sample-app.yaml
+# rm sample-app.yaml
 set +x

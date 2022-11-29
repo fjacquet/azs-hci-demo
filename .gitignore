@@ -1,3 +1,7 @@
 **/ds35/
 **/tpcc/
 **.ipynb
+sample-app.yaml
+prod-acme.yaml
+test-acme.yaml
+azure.json

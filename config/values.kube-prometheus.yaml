@@ -1,0 +1,27 @@
+prometheus:
+  enabled: true
+  ingress:
+    enabled: true
+    ingressClassName: "nginx"
+    hostname: prometheus.aks.ez-lab.xyz
+    path: /
+    servicePort: http
+    tls: false
+  service:
+    type: LoadBalancer
+    externalTrafficPolicy: Cluster
+    path: /
+    pathType: Prefix
+    ports:
+      http: 9090
+  persistence:
+    enabled: true
+kubeEtcd:
+  enabled: false
+kubeControllerManager:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubelet:
+  serviceMonitor:
+    https: false

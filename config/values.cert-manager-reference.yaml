@@ -50,7 +50,7 @@ global:
     # renewal of a leadership.
     # retryPeriod: 15s
 
-installCRDs: true
+installCRDs: false
 
 replicaCount: 1
 
@@ -179,7 +179,7 @@ ingressShim: {}
 prometheus:
   enabled: true
   servicemonitor:
-    enabled: true
+    enabled: false
     prometheusInstance: default
     targetPort: 9402
     path: /metrics
@@ -600,3 +600,4 @@ startupapicheck:
 
     # Optional additional labels to add to the startupapicheck's ServiceAccount
     # labels: {}
+

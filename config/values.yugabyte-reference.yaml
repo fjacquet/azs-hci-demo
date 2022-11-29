@@ -8,31 +8,31 @@ Image:
   pullPolicy: IfNotPresent
 
 storage:
-  ephemeral: false # will not allocate PVs when true
+  ephemeral: false  # will not allocate PVs when true
   master:
-    count: 3
+    count: 2
     size: 10Gi
-    storageClass: "default"
+    storageClass: ""
   tserver:
-    count: 3
+    count: 2
     size: 10Gi
-    storageClass: "default"
+    storageClass: ""
 
 resource:
   master:
     requests:
-      cpu: 1
-      memory: 1Gi
+      cpu: 2
+      memory: 2Gi
     limits:
-      cpu: 1
-      memory: 1Gi
+      cpu: 2
+      memory: 2Gi
   tserver:
     requests:
-      cpu: 1
-      memory: 1Gi
+      cpu: 2
+      memory: 4Gi
     limits:
-      cpu: 1
-      memory: 1Gi
+      cpu: 2
+      memory: 4Gi
 
 replicas:
   master: 3
@@ -167,7 +167,7 @@ multicluster:
   ## Enable it to deploy YugabyteDB in a multi-cluster services enabled
   ## Kubernetes cluster (KEP-1645). This will create ServiceExport.
   ## GKE Ref - https://cloud.google.com/kubernetes-engine/docs/how-to/multi-cluster-services#registering_a_service_for_export
-  ## You can use this gist for the reference to deploy the Yugabyte DB in a multi-cluster scenario.
+  ## You can use this gist for the reference to deploy the Yugabyte DB in a multi-cluster scenario. 
   ## Gist - https://gist.github.com/baba230896/78cc9bb6f4ba0b3d0e611cd49ed201bf
   createServiceExports: false
 
@@ -181,13 +181,12 @@ serviceMonitor:
   ## and one for yb-tserver
   ## https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#servicemonitor
   ##
-  enabled: true
+  enabled: false
   ## interval is the default scrape_interval for all the endpoints
   interval: 30s
   ## extraLabels can be used to add labels to the ServiceMonitors
   ## being created
-  extraLabels:
-    {}
+  extraLabels: {}
     # release: prom
 
   ## Configurations of ServiceMonitor for yb-master
@@ -220,29 +219,29 @@ serviceMonitor:
     path: "/prometheus-metrics"
 
   commonMetricRelabelings:
-    # https://git.io/JJW5p
-    # Save the name of the metric so we can group_by since we cannot by __name__ directly...
-    - sourceLabels: ["__name__"]
-      regex: "(.*)"
-      targetLabel: "saved_name"
-      replacement: "$1"
-    # The following basically retrofit the handler_latency_* metrics to label format.
-    - sourceLabels: ["__name__"]
-      regex: "handler_latency_(yb_[^_]*)_([^_]*)_([^_]*)(.*)"
-      targetLabel: "server_type"
-      replacement: "$1"
-    - sourceLabels: ["__name__"]
-      regex: "handler_latency_(yb_[^_]*)_([^_]*)_([^_]*)(.*)"
-      targetLabel: "service_type"
-      replacement: "$2"
-    - sourceLabels: ["__name__"]
-      regex: "handler_latency_(yb_[^_]*)_([^_]*)_([^_]*)(_sum|_count)?"
-      targetLabel: "service_method"
-      replacement: "$3"
-    - sourceLabels: ["__name__"]
-      regex: "handler_latency_(yb_[^_]*)_([^_]*)_([^_]*)(_sum|_count)?"
-      targetLabel: "__name__"
-      replacement: "rpc_latency$4"
+  # https://git.io/JJW5p
+  # Save the name of the metric so we can group_by since we cannot by __name__ directly...
+  - sourceLabels: ["__name__"]
+    regex: "(.*)"
+    targetLabel: "saved_name"
+    replacement: "$1"
+  # The following basically retrofit the handler_latency_* metrics to label format.
+  - sourceLabels: ["__name__"]
+    regex: "handler_latency_(yb_[^_]*)_([^_]*)_([^_]*)(.*)"
+    targetLabel: "server_type"
+    replacement: "$1"
+  - sourceLabels: ["__name__"]
+    regex: "handler_latency_(yb_[^_]*)_([^_]*)_([^_]*)(.*)"
+    targetLabel: "service_type"
+    replacement: "$2"
+  - sourceLabels: ["__name__"]
+    regex: "handler_latency_(yb_[^_]*)_([^_]*)_([^_]*)(_sum|_count)?"
+    targetLabel: "service_method"
+    replacement: "$3"
+  - sourceLabels: ["__name__"]
+    regex: "handler_latency_(yb_[^_]*)_([^_]*)_([^_]*)(_sum|_count)?"
+    targetLabel: "__name__"
+    replacement: "rpc_latency$4"
 
 resources: {}
 
@@ -311,6 +310,7 @@ master:
   # - name: custom-nfs-vol
   #   mountPath: /home/yugabyte/nfs-backup
   extraVolumeMounts: []
+
 
 tserver:
   ## Ref: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.22/#affinity-v1-core
@@ -419,3 +419,4 @@ podSecurityContext:
 ## Added to handle old universe which has volume annotations
 ## K8s universe <= 2.5 to >= 2.6
 legacyVolumeClaimAnnotations: false
+

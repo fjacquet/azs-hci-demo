@@ -1,0 +1,30 @@
+storage:
+  ephemeral: false # will not allocate PVs when true
+  master:
+    count: 3
+    size: 10Gi
+  tserver:
+    count: 3
+    size: 10Gi
+resource:
+  master:
+    requests:
+      cpu: 1
+      memory: 1Gi
+    limits:
+      cpu: 1
+      memory: 1Gi
+  tserver:
+    requests:
+      cpu: 1
+      memory: 1Gi
+    limits:
+      cpu: 1
+      memory: 1Gi
+
+serviceMonitor:
+  ## If true, two ServiceMonitor CRs are created. One for yb-master
+  ## and one for yb-tserver
+  ## https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#servicemonitor
+  ##
+  enabled: true

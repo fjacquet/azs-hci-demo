@@ -6,19 +6,21 @@
 . ./create-rg.sh
 . ./create-aks.sh
 . ./create-dns.sh
-. ./create-pip.sh
+# . ./create-pip.sh
 
-. ./deploy-nginx.sh
+. ./deploy-extdns.sh
+. ./deploy-ingress.sh
 . ./deploy-monitoring.sh
-. ./deploy-hello.sh
 . ./deploy-certmgr.sh
+. ./deploy-hello.sh
+. ./deploy-kuard.sh
+# . ./deploy-whoami.sh
 . ./deploy-db.sh
-. ./deploy-redis.sh
+# . ./deploy-redis.sh
 
 . ./deploy-wikijs.sh
 . ./deploy-kubeapps.sh
 . ./deploy-sonarqube.sh
 . ./deploy-jenkins.sh
+. ./deploy-keycloak.sh
 . ./deploy-gitlab.sh
-
-

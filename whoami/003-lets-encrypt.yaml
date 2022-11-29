@@ -1,0 +1,16 @@
+# ---
+# apiVersion: cert-manager.io/v1
+# kind: ClusterIssuer
+# metadata:
+#   name: ez-lab-cert
+#   namespace: default
+# spec:
+#   acme:
+#     server: https://acme-staging-v02.api.letsencrypt.org/directory
+#     email: fjacquet@ljfch.onmicrosoft.com
+#     privateKeySecretRef:
+#       name: ez-lab-cert
+#     solvers:
+#       - http01:
+#           ingress:
+#             class: traefik
