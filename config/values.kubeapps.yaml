@@ -1,10 +1,20 @@
+service:
+  type: LoadBalancer
+  port: 80
+  httpsPort: 443
+
 ingress:
   enabled: true
   hostname: apps.aks.ez-lab.xyz
   ingressClassName: "nginx"
-  path: /
-  servicePort: http
-  tls: false
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+  hosts:
+    - host: apps.aks.ez-lab.xyz
+      paths:
+        - path: "/"
+          pathType: Prefix
+  tls: true
 frontend:
   service:
     type: LoadBalancer

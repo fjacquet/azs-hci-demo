@@ -3,11 +3,13 @@ auth:
   ##
   adminUser: user
   adminPassword: "delltech"
-# tls:
-#   enabled: true
+
 ingress:
   enabled: true
   hostname: keycloak.aks.ez-lab.xyz
   ingressClassName: "nginx"
+  tls: true
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
   path: /
   servicePort: http

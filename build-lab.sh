@@ -13,7 +13,8 @@
 . ./deploy-monitoring.sh
 . ./deploy-certmgr.sh
 . ./deploy-hello.sh
-. ./deploy-whoami.sh
+. ./deploy-kuard.sh
+# . ./deploy-whoami.sh
 . ./deploy-db.sh
 # . ./deploy-redis.sh
 

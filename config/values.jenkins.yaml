@@ -31,5 +31,8 @@ ingress:
   enabled: true
   hostname: jenkins.aks.ez-lab.xyz
   ingressClassName: "nginx"
+  tls: true
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
   path: /
   servicePort: http

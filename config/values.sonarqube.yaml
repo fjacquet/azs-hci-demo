@@ -2,8 +2,9 @@ ingress:
   enabled: true
   hostname: sonarqube.aks.ez-lab.xyz
   ingressClassName: "nginx"
-  path: /
-  servicePort: http
+  tls: true
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
 sonarqubeUsername: user
 sonarqubePassword: "delltech"
 sonarqubeEmail: fjacquet@ljfch.onmicrosoft.com

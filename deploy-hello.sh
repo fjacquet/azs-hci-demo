@@ -40,11 +40,11 @@ kind: Ingress
 metadata:
   name: hello-rule
   annotations:
-    # nginx.ingress.kubernetes.io/rewrite-target: /$2
-    # nginx.ingress.kubernetes.io/use-regex: "true"
-    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
 spec:
-  ingressClassName: traefik
   tls:
   - hosts:
       - hello.$AZ_DNS_DOMAIN
