@@ -5,3 +5,5 @@ sample-app.yaml
 prod-acme.yaml
 test-acme.yaml
 azure.json
+velero-role.json
+credentials-velero.txt

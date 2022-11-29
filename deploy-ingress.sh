@@ -4,9 +4,9 @@ set -x
 #-----------------------------------------------------------------------------
 #### traefik
 #----------------------------------------------------------------------------
-helm upgrade --install traefik traefik/traefik \
-  --create-namespace \
-  -f config/values.traefik.yaml --wait
+# helm upgrade --install traefik traefik/traefik \
+#   --create-namespace \
+#   -f config/values.traefik.yaml --wait
 #-----------------------------------------------------------------------------
 #### nginx ingress
 #-----------------------------------------------------------------------------

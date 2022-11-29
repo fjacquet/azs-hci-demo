@@ -7,7 +7,7 @@ set -x
 az aks create \
   --resource-group $AZ_RESOURCE_GROUP \
   --name $AKS_CLUSTER_NAME \
-  --node-count 1 \
+  --node-count 3 \
   --node-vm-size $AKS_SIZE \
   --load-balancer-sku standard \
   --enable-addons monitoring \

@@ -6,10 +6,10 @@
 . ./create-rg.sh
 . ./create-aks.sh
 . ./create-dns.sh
-# . ./create-pip.sh
-
 . ./deploy-extdns.sh
 . ./deploy-ingress.sh
+# . ./create-pip.sh
+
 . ./deploy-monitoring.sh
 . ./deploy-certmgr.sh
 . ./deploy-hello.sh
