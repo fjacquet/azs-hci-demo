@@ -1,0 +1,28 @@
+service:
+  type: LoadBalancer
+  port: 80
+  httpsPort: 443
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+  hosts:
+    - host: wiki.aks.ez-lab.xyz
+      paths:
+        - path: "/"
+          pathType: Prefix
+  tls:
+    - secretName: wiki-example-tls
+      hosts:
+        - wiki.aks.ez-lab.xyz
+
+externalPostgresql:
+  # note: ?sslmode=require => ?ssl=true
+  databaseURL: postgresql://aks:aks@yb-tserver-service.yugabyte.svc.cluster.local:5433/wikijs?sslmode=disable
+  # For self signed CAs, like DigitalOcean
+  NODE_TLS_REJECT_UNAUTHORIZED: "0"
+
+postgresql:
+  enabled: false

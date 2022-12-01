@@ -1,0 +1,12 @@
+ingress:
+  enabled: true
+  hostname: sonarqube.aks.ez-lab.xyz
+  ingressClassName: "nginx"
+  tls: true
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+sonarqubeUsername: user
+sonarqubePassword: "delltech"
+sonarqubeEmail: fjacquet@ljfch.onmicrosoft.com
+service:
+  type: LoadBalancer

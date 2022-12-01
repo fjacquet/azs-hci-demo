@@ -15,3 +15,8 @@ kubeProxy:
 # Optional: Disable Grafana if you have your own deployment
 grafana:
     enabled: true
+    plugins:
+        - grafana-piechart-panel
+prometheusOperator:
+    admissionWebhooks:
+        enabled: false

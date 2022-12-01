@@ -1,0 +1,44 @@
+scontroller:
+  replicaCount: 2
+  service:
+    externalTrafficPolicy: Local
+    ports:
+      http: 80
+      https: 443
+    targetPorts:
+      http: http
+      https: https
+    type: LoadBalancer
+    annotations:
+      service.beta.kubernetes.io/azure-dns-label-name: aks.ez-lab.xyz
+  nodeSelector:
+    kubernetes.io/os: linux
+  admissionWebhooks:
+    enabled: true
+    patch:
+      nodeSelector:
+        kubernetes.io/os: linux
+  metrics:
+    port: 10254
+    portName: metrics
+    # if this port is changed, change healthz-port: in extraArgs: accordingly
+    enabled: true
+  defaultBackend:
+    nodeSelector:
+      kubernetes.io/os: linux
+  ingressClass: nginx
+  ingressClassResource:
+    name: nginx
+    enabled: true
+    default: false
+    controllerClass: "k8s.io/ingress-nginx"
+  publishService:
+    enabled: true
+  updateStrategy:
+    type: RollingUpdate
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 50
+    targetMemoryUtilizationPercentage: 50

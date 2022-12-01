@@ -1,0 +1,38 @@
+controller:
+  jenkinsUser: "user"
+  jenkinsPassword: "delltech"
+  serviceType: LoadBalancer
+  installPlugins:
+    - configuration-as-code:latest
+    - kubernetes:latest
+    - workflow-aggregator:latest
+    - workflow-job:latest
+    - credentials-binding:latest
+    - git:latest
+    - git-client:latest
+    - git-server:latest
+    - greenballs:latest
+    - blueocean:latest
+    - strict-crumb-issuer:latest
+    - http_request:latest
+    - matrix-project:latest
+    - jquery:latest
+    - artifactory:latest
+    - jdk-tool:latest
+    - matrix-auth:latest
+    - credentials:latest
+    - pipeline-utility-steps:latest
+    - docker-workflow:latest
+    - command-launcher:latest
+    - github-branch-source:latest
+  # Set to false to download the minimum required version of all dependencies.
+  installLatestPlugins: true
+ingress:
+  enabled: true
+  hostname: jenkins.aks.ez-lab.xyz
+  ingressClassName: "nginx"
+  tls: true
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+  path: /
+  servicePort: http

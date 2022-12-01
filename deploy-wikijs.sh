@@ -1,22 +1,34 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
 set -x
+
+# connect to DB
+#-----------------------------------------------------------------------------
+# cleanup if needed
+kubectl exec \
+  --namespace $NAMESPACE_YUGA \
+  -it yb-tserver-0 \
+  -- /home/yugabyte/bin/ysqlsh \
+  -h yb-tserver-0.yb-tservers.yugabyte \
+  -c "DROP DATABASE wikijs;"
+# create db
+kubectl exec \
+  --namespace $NAMESPACE_YUGA \
+  -it yb-tserver-0 \
+  -- /home/yugabyte/bin/ysqlsh \
+  -h yb-tserver-0.yb-tservers.yugabyte \
+  -c "CREATE DATABASE wikijs;"
+
 #-----------------------------------------------------------------------------
 #### wikijs
 #-----------------------------------------------------------------------------
 
-# connect to DB
-kubectl run ysqlsh-client -it --rm --image yugabytedb/yugabyte-client \
-  --command -- ysqlsh -h yb-tservers.$AZ_RESOURCE_GROUP.svc.cluster.local
-# create DB
-create database wikijs
+helm upgrade --install $DIST requarks/wiki \
+  --create-namespace \
+  -n $NAMESPACE_WIKIJS \
+  -f config/values.wiki.yaml
+# --wait \
+# --timeout=15m
 
-helm upgrade --install $DIST requarks/wiki -n $NAMESPACE_WIKIJS \
-  --set postgresql.enabled=false \
-  --set ingres.enabled=true \
-  --set externalPostgresql.databaseURL="postgresql://yugabyte@yb-tserver-service.$AZ_RESOURCE_GROUP.svc.cluster.local:5433/wikijs?sslmode=disable"
-
-podname=$(kubectl get pod -n $NAMESPACE_WIKIJS -o jsonpath='{.items[0].metadata.name}')
-kubectl port-forward -n $NAMESPACE_WIKIJS $podname 8081:3000
-kubectl scale --replicas 5 deployment $DIST-wiki -n $NAMESPACE_WIKIJS
+#
 set +x

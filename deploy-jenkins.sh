@@ -5,8 +5,10 @@ set -x
 #### jenkins
 #-----------------------------------------------------------------------------
 
+helm upgrade --install jenkins bitnami/jenkins \
+  --create-namespace \
+  -n $NAMESPACE_JENKINS \
+  -f config/values.jenkins.yaml --wait
 
-helm upgrade --install -f jenkins-values.yaml myjenkins jenkins/jenkins
-kubectl exec --namespace default -it svc/myjenkins -c jenkins -- /bin/cat /run/secrets/chart-admin-password && echo
-kubectl --namespace default port-forward svc/myjenkins 8080:8080
+# kubectl get secret --namespace jenkins jenkins -o jsonpath="{.data.jenkins-password}" | base64 -d
 set +x
