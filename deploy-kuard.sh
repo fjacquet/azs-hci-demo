@@ -5,7 +5,7 @@ set -x
 #### Kubeapps
 #-----------------------------------------------------------------------------
 
-kubectl apply -f kuard.yaml
+kubectl apply -f yaml/kuard.yaml
 
 kubectl describe certificate quickstart-example-tls
 

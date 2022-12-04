@@ -1,0 +1,306 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: eck-azurefile-sc
+provisioner: kubernetes.io/azure-file
+reclaimPolicy: Retain
+allowVolumeExpansion: true
+mountOptions:
+  - dir_mode=0777
+  - file_mode=0777
+  - uid=1000
+  - gid=1000
+  - mfsymlinks
+  - nobrl
+parameters:
+  skuName: Standard_LRS
+---
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: elasticsearch
+  namespace: default
+spec:
+  version: 8.5.2
+  monitoring:
+    metrics:
+      elasticsearchRefs:
+        - name: monitoring
+    logs:
+      elasticsearchRefs:
+        - name: monitoring
+  volumeClaimDeletePolicy: DeleteOnScaledownOnly
+  updateStrategy:
+    changeBudget:
+      maxSurge: 3
+      maxUnavailable: 1
+  nodeSets:
+    - name: master-nodes
+      count: 3
+      podTemplate:
+        spec:
+          initContainers:
+            - name: sysctl
+              securityContext:
+                privileged: true
+                runAsUser: 0
+              command: ["sh", "-c", "sysctl -w vm.max_map_count=262144"]
+      config:
+        # node.store.allow_mmap: false
+        node.roles: ["master"]
+        xpack.ml.enabled: true
+        # node.remote_cluster_client: false
+      volumeClaimTemplates:
+        - metadata:
+            name: elasticsearch-data
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 10Gi
+            storageClassName: eck-azurefile-sc
+    - name: data-nodes
+      count: 6
+      podTemplate:
+        spec:
+          initContainers:
+            - name: sysctl
+              securityContext:
+                privileged: true
+                runAsUser: 0
+              command: ["sh", "-c", "sysctl -w vm.max_map_count=262144"]
+      config:
+        node.roles: ["data", "ingest", "ml", "transform"]
+        # node.remote_cluster_client: false
+      volumeClaimTemplates:
+        - metadata:
+            name: elasticsearch-data
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 10Gi
+            storageClassName: eck-azurefile-sc
+  transport:
+    service:
+      metadata:
+        labels:
+          my-custom: label
+      spec:
+        type: LoadBalancer
+    tls:
+      subjectAltNames:
+        - ip: 1.2.3.4
+        - dns: es.ez-lab.xyz
+
+---
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: elasticsearch
+  namespace: default
+spec:
+  version: 8.5.2
+  count: 1
+  config:
+    monitoring.ui.container.elasticsearch.enabled: true
+  podTemplate:
+    metadata:
+      labels:
+        scrape: kb
+  elasticsearchRef:
+    name: elasticsearch
+  monitoring:
+    metrics:
+      elasticsearchRefs:
+        - name: monitoring
+    logs:
+      elasticsearchRefs:
+        - name: monitoring
+  http:
+    service:
+      spec:
+        type: LoadBalancer
+    tls:
+      selfSignedCertificate:
+        subjectAltNames:
+          - dns: kibana.aks-ez-lab.xyz
+---
+apiVersion: apm.k8s.elastic.co/v1
+kind: ApmServer
+metadata:
+  name: elasticsearch
+  namespace: default
+spec:
+  version: 8.5.2
+  count: 1
+  config:
+    output:
+      elasticsearch:
+        headers:
+          X-My-Header: Just an example of a custom settings
+  elasticsearchRef:
+    name: elasticsearch
+  kibanaRef:
+    name: elasticsearch
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: metricbeat
+rules:
+  - apiGroups: [""] # "" indicates the core API group
+    resources:
+      - namespaces
+      - pods
+      - nodes
+    verbs:
+      - get
+      - watch
+      - list
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: metricbeat
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: metricbeat
+subjects:
+  - kind: ServiceAccount
+    name: metricbeat
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: metricbeat
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: beat.k8s.elastic.co/v1beta1
+kind: Beat
+metadata:
+  name: elasticsearch
+  namespace: default
+spec:
+  type: filebeat
+  version: 8.5.2
+  elasticsearchRef:
+    name: elasticsearch
+  kibanaRef:
+    name: elasticsearch
+  monitoring:
+    metrics:
+      elasticsearchRefs:
+        - name: monitoring
+    logs:
+      elasticsearchRefs:
+        - name: monitoring
+  config:
+    filebeat:
+    autodiscover:
+      providers:
+        - type: kubernetes
+          node: ${NODE_NAME}
+          hints:
+            enabled: true
+            default_config:
+              type: container
+              paths:
+                - /var/log/containers/*${data.kubernetes.container.id}.log
+    filebeat.inputs:
+      - type: container
+        paths:
+          - /var/log/containers/*.log
+  daemonSet:
+    podTemplate:
+      spec:
+        serviceAccountName: filebeat
+        automountServiceAccountToken: true
+        terminationGracePeriodSeconds: 30
+        dnsPolicy: ClusterFirstWithHostNet
+        hostNetwork: true
+        securityContext:
+          runAsUser: 0
+        containers:
+          - name: filebeat
+            volumeMounts:
+              - name: varlogcontainers
+                mountPath: /var/log/containers
+              - name: varlogpods
+                mountPath: /var/log/pods
+              - name: varlibdockercontainers
+                mountPath: /var/lib/docker/containers
+        volumes:
+          - name: varlogcontainers
+            hostPath:
+              path: /var/log/containers
+          - name: varlogpods
+            hostPath:
+              path: /var/log/pods
+          - name: varlibdockercontainers
+            hostPath:
+              path: /var/lib/docker/containers
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: filebeat
+rules:
+  - apiGroups: [""] # "" indicates the core API group
+    resources:
+      - namespaces
+      - pods
+      - nodes
+    verbs:
+      - get
+      - watch
+      - list
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: filebeat
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: filebeat
+subjects:
+  - kind: ServiceAccount
+    name: filebeat
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: filebeat
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+  name: kibana-ingress
+  namespace: default
+spec:
+  rules:
+    - host: kibana.aks-ez-lab.xyz
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: elasticsearch-kb-http
+                port:
+                  number: 5601
+  tls:
+    - hosts:
+        - kibana.aks-ez-lab.xyz
+      secretName: kibana.aks-ez-lab.xyz
