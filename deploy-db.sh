@@ -12,7 +12,7 @@ helm upgrade --install yugabyte yugabytedb/yugabyte \
   -f config/values.yugabyte.yaml \
   --wait
 
-sleep 180
+sleep 120
 
 kubectl get pods --namespace $NAMESPACE_YUGA
 kubectl get services --namespace $NAMESPACE_YUGA

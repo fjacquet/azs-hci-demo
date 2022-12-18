@@ -21,6 +21,6 @@ New-ArcHciAksConfigFiles  `
   -k8snodeippoolstart "192.168.0.11"  `
   -k8snodeippoolend "192.168.0.11"  `
   -controlPlaneIP "192.168.0.161"
-  
+
 az account set -s $subscriptionid
 az arcappliance validate hci --config-file $configFilePath

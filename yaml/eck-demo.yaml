@@ -122,11 +122,11 @@ spec:
   http:
     service:
       spec:
-        type: LoadBalancer
-    tls:
-      selfSignedCertificate:
-        subjectAltNames:
-          - dns: kibana.aks-ez-lab.xyz
+        type: ClusterIP
+    # tls:
+    #   selfSignedCertificate:
+    #     subjectAltNames:
+    #       - dns: kibana.aks-ez-lab.xyz
 ---
 apiVersion: apm.k8s.elastic.co/v1
 kind: ApmServer

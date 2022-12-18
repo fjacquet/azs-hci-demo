@@ -1,0 +1,61 @@
+apiVersion: storage.dell.com/v1
+kind: CSIIsilon
+metadata:
+  name: isilon
+  namespace: default
+spec:
+  driver:
+    common:
+      envs:
+        - name: X_CSI_VERBOSE
+          value: "1"
+        - name: X_CSI_ISI_PORT
+          value: "8080"
+        - name: X_CSI_ISI_PATH
+          value: /ifs/data/csi
+        - name: X_CSI_ISI_NO_PROBE_ON_START
+          value: "false"
+        - name: X_CSI_ISI_AUTOPROBE
+          value: "true"
+        - name: X_CSI_ISI_SKIP_CERTIFICATE_VALIDATION
+          value: "true"
+        - name: X_CSI_ISI_AUTH_TYPE
+          value: "0"
+        - name: X_CSI_CUSTOM_TOPOLOGY_ENABLED
+          value: "false"
+        - name: X_CSI_MAX_PATH_LIMIT
+          value: "192"
+      image: "dellemc/csi-isilon:v2.4.0"
+      imagePullPolicy: IfNotPresent
+    configVersion: v2.4.0
+    controller:
+      envs:
+        - name: X_CSI_ISI_QUOTA_ENABLED
+          value: "true"
+        - name: X_CSI_ISI_ACCESS_ZONE
+          value: System
+        - name: X_CSI_ISI_VOLUME_PATH_PERMISSIONS
+          value: "0777"
+      nodeSelector: null
+      tolerations: null
+    dnsPolicy: ClusterFirstWithHostNet
+    forceUpdate: false
+    fsGroupPolicy: ReadWriteOnceWithFSType
+    node:
+      envs:
+        - name: X_CSI_MAX_VOLUMES_PER_NODE
+          value: "0"
+        - name: X_CSI_ALLOWED_NETWORKS
+          value: ""
+      nodeSelector: null
+      tolerations: null
+    replicas: 2
+    sideCars:
+      - args:
+          - "--leader-election-lease-duration=15s"
+          - "--leader-election-renew-deadline=10s"
+          - "--leader-election-retry-period=5s"
+        name: common
+      - args:
+          - "--volume-name-prefix=csipscale"
+        name: provisioner

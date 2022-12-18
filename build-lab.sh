@@ -8,13 +8,13 @@
 . ./create-dns.sh
 . ./deploy-extdns.sh
 . ./deploy-ingress.sh
-# . ./create-pip.sh
 
 . ./deploy-monitoring.sh
 . ./deploy-certmgr.sh
 . ./deploy-hello.sh
 . ./deploy-kuard.sh
 # . ./deploy-whoami.sh
+. ./deploy-longhorn.sh
 . ./deploy-db.sh
 # . ./deploy-redis.sh
 

@@ -4,6 +4,7 @@ set -x
 
 # Define public Kubernetes chart repository in the Helm configuration
 helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo add dell https://dell.github.io/helm-charts
 helm repo add elastic https://helm.elastic.co
 helm repo add gitlab https://charts.gitlab.io/
 helm repo add grafana https://grafana.github.io/helm-charts
