@@ -32,7 +32,7 @@ DNS_ID=$(az network dns zone show --name $AZ_DNS_DOMAIN \
 export EDNS_SP_NAME EDNS_SP_APP_ID EDNS_SP_PASSWORD
 export DNS_ID DNS_SP
 
-kubectl create secret generic EDNS-config \
+kubectl create secret generic edns-config \
   --from-literal=client-secret=$EDNS_SP_PASSWORD
 
 # 1. as a reader to the resource group
