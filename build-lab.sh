@@ -14,7 +14,6 @@
 . ./deploy-hello.sh
 . ./deploy-kuard.sh
 # . ./deploy-whoami.sh
-. ./deploy-longhorn.sh
 . ./deploy-db.sh
 # . ./deploy-redis.sh
 
@@ -24,3 +23,5 @@
 . ./deploy-jenkins.sh
 . ./deploy-keycloak.sh
 . ./deploy-gitlab.sh
+
+. ./deploy-longhorn.sh

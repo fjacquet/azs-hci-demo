@@ -3,8 +3,8 @@
 
 ACME_ISSUER_EMAIL=fjacquet@ljfch.onmicrosoft.com
 AKS_CLUSTER_NAME=aks-demo
-AKS_COUNT=4
-AKS_SIZE=Standard_D4ds_v5
+AKS_COUNT=5
+AKS_SIZE=Standard_D8ds_v5
 AZ_DNS_DOMAIN=aks.ez-lab.xyz
 AZ_RESOURCE_GROUP=aksrg
 AZ_SUBSCRIPTION_ID=$(az account show --query id --output tsv)

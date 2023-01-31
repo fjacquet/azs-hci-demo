@@ -7,12 +7,11 @@ set -x
 az aks create \
   --resource-group $AZ_RESOURCE_GROUP \
   --name $AKS_CLUSTER_NAME \
-  --node-count 3 \
+  --node-count $AKS_COUNT \
   --node-vm-size $AKS_SIZE \
-  --load-balancer-sku standard \
-  --enable-addons monitoring \
+  --load-balancer-sku basic \
   --vm-set-type VirtualMachineScaleSets \
-  --generate-ssh-keys
+  --generate-ssh-keys # --enable-addons monitoring \
 # --enable-managed-identity \
 
 # Create .kubeconfig
